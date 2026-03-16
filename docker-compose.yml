@@ -1,0 +1,72 @@
+# IRO - Indian Reformer Organisation
+# VPS Deployment
+# Usage: docker compose up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: iro-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${IRO_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${IRO_DB_PASSWORD}
+      POSTGRES_DB: ${IRO_DB_NAME:-iro}
+    volumes:
+      - iro_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512m
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: iro-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${IRO_DB_USER:-postgres}:${IRO_DB_PASSWORD}@postgres:5432/${IRO_DB_NAME:-iro}?schema=public
+      JWT_SECRET: ${IRO_JWT_SECRET}
+      ENCRYPTION_KEY: ${IRO_ENCRYPTION_KEY}
+      CORS_ORIGIN: ${IRO_CORS_ORIGIN:-http://localhost:3000}
+    ports:
+      - "4000:4000"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1g
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://iro-backend:4000
+    container_name: iro-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://iro-backend:4000
+    ports:
+      - "3000:3000"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1g
+
+volumes:
+  iro_postgres_data:

@@ -1,0 +1,47 @@
+# IRO - Use EXISTING PostgreSQL (e.g. rentfoxxy-erp-postgres)
+# 1. Create database: docker exec -it rentfoxxy-erp-postgres psql -U postgres -c "CREATE DATABASE iro;"
+# 2. Run: docker compose -f docker-compose.shared-db.yml up -d
+# 3. Ensure both projects are on the same Docker network
+
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: iro-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${SHARED_DB_USER:-postgres}:${SHARED_DB_PASSWORD}@${SHARED_DB_HOST:-rentfoxxy-erp-postgres}:5432/iro?schema=public
+      JWT_SECRET: ${IRO_JWT_SECRET}
+      ENCRYPTION_KEY: ${IRO_ENCRYPTION_KEY}
+      CORS_ORIGIN: ${IRO_CORS_ORIGIN:-http://localhost:3000}
+    ports:
+      - "4000:4000"
+    networks:
+      - iro_net
+      - laptop-erp_default  # Your existing project network - adjust name if different
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://iro-backend:4000
+    container_name: iro-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    networks:
+      - iro_net
+
+networks:
+  iro_net:
+    driver: bridge
+  laptop-erp_default:
+    external: true

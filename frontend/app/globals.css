@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── IRO Design Tokens (Sprint 1) ───────────────────────────── */
+:root {
+  /* Primary palette */
+  --iro-navy: #0D1B2A;
+  --iro-orange: #E8892C;
+  --iro-cream: #F7F4EF;
+  --iro-slate: #2C3E50;
+
+  /* Semantic aliases */
+  --primary: var(--iro-navy);
+  --accent: var(--iro-orange);
+  --neutral: var(--iro-cream);
+  --text: var(--iro-slate);
+
+  /* Legacy / utility */
+  --success: #16A34A;
+  --warning: #F59E0B;
+  --error: #DC2626;
+}
+
+body {
+  @apply antialiased;
+  background-color: var(--iro-cream);
+  color: var(--iro-slate);
+}
+
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl border border-white/20;
+    background-color: rgba(247, 244, 239, 0.7);
+  }
+  .glass-dark {
+    @apply backdrop-blur-xl border border-white/10;
+    background-color: rgba(13, 27, 42, 0.8);
+  }
+}

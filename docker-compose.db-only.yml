@@ -1,0 +1,27 @@
+# IRO - Database Only (deploy now, add backend/frontend later)
+# Usage: docker compose -f docker-compose.db-only.yml up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: iro-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${IRO_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${IRO_DB_PASSWORD}
+      POSTGRES_DB: ${IRO_DB_NAME:-iro}
+    volumes:
+      - iro_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512m
+
+volumes:
+  iro_postgres_data:
