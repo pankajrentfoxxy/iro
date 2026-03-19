@@ -1,5 +1,5 @@
-# IRO Backend - Production
-FROM node:20-alpine AS builder
+# IRO Backend - Production (Debian base for Prisma/OpenSSL compatibility)
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ COPY tsconfig.json tsconfig.build.json ./
 RUN npx tsc -p tsconfig.build.json
 
 # Production image
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
@@ -39,11 +39,10 @@ RUN npx prisma generate
 COPY --from=builder /app/dist ./dist
 COPY prisma ./prisma/
 
-# Non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
-USER nodejs
+# Run as root (Prisma needs write access for migrate deploy)
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 4000
 
-# Run migrations then start
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
+CMD ["/entrypoint.sh"]
