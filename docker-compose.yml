@@ -24,6 +24,16 @@ services:
           cpus: '0.5'
           memory: 512m
 
+  redis:
+    image: redis:7-alpine
+    container_name: iro-redis
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128m
+
   backend:
     build:
       context: ./backend
@@ -33,10 +43,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_started
     environment:
       NODE_ENV: production
       PORT: 4000
-      DATABASE_URL: postgresql://${IRO_DB_USER:-postgres}:${IRO_DB_PASSWORD}@postgres:5432/${IRO_DB_NAME:-iro}?schema=public
+      # Use DATABASE_URL from .env if set (required when password has @#! etc); else construct from vars
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${IRO_DB_USER:-postgres}:${IRO_DB_PASSWORD}@postgres:5432/${IRO_DB_NAME:-iro}?schema=public}
+      REDIS_URL: redis://redis:6379
       JWT_SECRET: ${IRO_JWT_SECRET}
       ENCRYPTION_KEY: ${IRO_ENCRYPTION_KEY}
       CORS_ORIGIN: ${IRO_CORS_ORIGIN:-http://localhost:3000}
