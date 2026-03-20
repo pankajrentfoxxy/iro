@@ -6,5 +6,7 @@ echo "Pulling latest code..."
 git pull origin main
 echo "Building and starting containers..."
 docker compose up -d --build
+echo "Running database migrations..."
+docker compose exec -T backend npx prisma migrate deploy
 echo "Done. Status:"
 docker compose ps
