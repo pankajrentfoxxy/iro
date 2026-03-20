@@ -8,6 +8,23 @@ import { prisma } from '../lib/prisma.js';
 const router = Router();
 
 router.get('/stats', async (_req: Request, res: Response) => {
+  // Check homepage stats override first
+  const override = await prisma.homepageStatsOverride.findUnique({
+    where: { id: 1 },
+  });
+  if (override?.useOverride && override.totalReformers != null) {
+    return res.json({
+      totalMembers: override.totalReformers,
+      stateCount: override.states ?? 0,
+      districtCount: override.districts ?? 0,
+      growthPercent: override.growthPercent?.toString() ?? '0',
+      totalCampaigns: 0, // override doesn't include campaigns
+      totalVolunteers: override.totalReformers,
+      byState: [],
+      byDistrict: [],
+    });
+  }
+
   const [
     totalMembers,
     stateCount,

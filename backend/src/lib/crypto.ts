@@ -52,3 +52,15 @@ export function hashForLookup(phone: string): string {
   const key = getKey();
   return scryptSync(phone, key.toString('hex').slice(0, 16), 16).toString('hex');
 }
+
+/** Decrypt and mask phone for admin display (e.g. "987****23") */
+export function maskPhoneForDisplay(encryptedPhone: string | null): string {
+  if (!encryptedPhone) return '—';
+  try {
+    const phone = decryptPhone(encryptedPhone);
+    if (phone.length >= 4) return `+91 ${phone.slice(0, 3)}****${phone.slice(-2)}`;
+    return '***';
+  } catch {
+    return '***';
+  }
+}

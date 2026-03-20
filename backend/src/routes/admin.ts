@@ -151,4 +151,62 @@ router.delete('/media/:id', async (req: AuthRequest, res: Response) => {
   res.json({ success: true });
 });
 
+// ============ HOMEPAGE STATS OVERRIDE ============
+
+const statsOverrideSchema = z.object({
+  totalReformers: z.number().int().min(0).optional(),
+  states: z.number().int().min(0).optional(),
+  districts: z.number().int().min(0).optional(),
+  growthPercent: z.number().min(0).max(100).optional(),
+  useOverride: z.boolean().optional(),
+});
+
+router.get('/homepage-stats-override', async (_req: AuthRequest, res: Response) => {
+  const row = await prisma.homepageStatsOverride.upsert({
+    where: { id: 1 },
+    create: { id: 1, useOverride: false },
+    update: {},
+  });
+  res.json({
+    totalReformers: row.totalReformers,
+    states: row.states,
+    districts: row.districts,
+    growthPercent: row.growthPercent?.toString(),
+    useOverride: row.useOverride,
+  });
+});
+
+router.patch('/homepage-stats-override', async (req: AuthRequest, res: Response) => {
+  const result = statsOverrideSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: 'Invalid input', details: result.error.flatten() });
+  }
+  const data = result.data;
+  const row = await prisma.homepageStatsOverride.upsert({
+    where: { id: 1 },
+    create: {
+      id: 1,
+      totalReformers: data.totalReformers ?? null,
+      states: data.states ?? null,
+      districts: data.districts ?? null,
+      growthPercent: data.growthPercent ?? null,
+      useOverride: data.useOverride ?? false,
+    },
+    update: {
+      ...(data.totalReformers !== undefined && { totalReformers: data.totalReformers }),
+      ...(data.states !== undefined && { states: data.states }),
+      ...(data.districts !== undefined && { districts: data.districts }),
+      ...(data.growthPercent !== undefined && { growthPercent: data.growthPercent }),
+      ...(data.useOverride !== undefined && { useOverride: data.useOverride }),
+    },
+  });
+  res.json({
+    totalReformers: row.totalReformers,
+    states: row.states,
+    districts: row.districts,
+    growthPercent: row.growthPercent?.toString(),
+    useOverride: row.useOverride,
+  });
+});
+
 export default router;

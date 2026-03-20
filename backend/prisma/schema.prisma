@@ -293,6 +293,18 @@ model MediaItem {
   @@index([createdAt])
 }
 
+// ============ HOMEPAGE STATS OVERRIDE ============
+
+model HomepageStatsOverride {
+  id              Int      @id @default(1)
+  totalReformers  Int?
+  states          Int?
+  districts       Int?
+  growthPercent   Decimal? @db.Decimal(5, 2)
+  useOverride     Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+}
+
 // ============ LATEST UPDATES (Home Hero) ============
 
 model LatestUpdate {
