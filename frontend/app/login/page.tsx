@@ -34,7 +34,7 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.error || 'Login failed');
       localStorage.setItem('token', data.token);
       const isAdmin = ['NATIONAL_ADMIN', 'STATE_ADMIN', 'DISTRICT_ADMIN', 'TEHSIL_ADMIN', 'BOOTH_COORDINATOR'].includes(data.user?.role);
-      router.push(isAdmin ? '/admin' : '/');
+      router.push(isAdmin ? '/iro-admin' : '/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -79,7 +79,7 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.error || 'Invalid OTP');
       localStorage.setItem('token', data.token);
       const isAdmin = ['NATIONAL_ADMIN', 'STATE_ADMIN', 'DISTRICT_ADMIN', 'TEHSIL_ADMIN', 'BOOTH_COORDINATOR'].includes(data.user?.role);
-      router.push(isAdmin ? '/admin' : '/');
+      router.push(isAdmin ? '/iro-admin' : '/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid OTP');
     } finally {

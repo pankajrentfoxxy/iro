@@ -68,9 +68,10 @@ router.post('/otp/request', async (req: Request, res: Response) => {
   const otp = generateOTP();
   await storeOTP(phone, otp);
 
-  // TODO: Integrate SMS provider (Twilio/MSG91) - for now log in dev
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[DEV] OTP for ${phone}: ${otp}`);
+  // Log OTP when SMS not integrated (dev) or when ALLOW_DEV_OTP is set (staging/VPS testing)
+  const allowDevOtp = process.env.ALLOW_DEV_OTP === '1' || process.env.ALLOW_DEV_OTP === 'true';
+  if (process.env.NODE_ENV === 'development' || allowDevOtp) {
+    console.log(`[OTP] For ${phone}: ${otp}`);
   }
 
   res.json({ success: true, message: 'OTP sent' });

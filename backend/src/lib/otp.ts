@@ -40,10 +40,15 @@ export async function storeOTP(phone: string, otp: string): Promise<void> {
   memoryStore.set(key, { value: otp, expiresAt: Date.now() + OTP_EXPIRY * 1000 });
 }
 
-// Dev bypass: accept 123456 in development for easy testing (no SMS)
+// Dev bypass: accept 123456 when ALLOW_DEV_OTP is set (for VPS/staging when SMS not configured)
 const DEV_OTP = '123456';
 
 export async function verifyOTP(phone: string, otp: string): Promise<boolean> {
+  const v = (process.env.ALLOW_DEV_OTP || '').trim().toLowerCase();
+  const allowDevOtp = ['1', 'true', 'yes', 'on'].includes(v);
+  if (allowDevOtp && otp === DEV_OTP) {
+    return true;
+  }
   if (process.env.NODE_ENV !== 'production' && otp === DEV_OTP) {
     return true;
   }

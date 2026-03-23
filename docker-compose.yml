@@ -54,6 +54,8 @@ services:
       JWT_SECRET: ${IRO_JWT_SECRET}
       ENCRYPTION_KEY: ${IRO_ENCRYPTION_KEY}
       CORS_ORIGIN: ${IRO_CORS_ORIGIN:-http://localhost:3000}
+      INIT_ADMIN_PHONE: ${INIT_ADMIN_PHONE:-}
+      ALLOW_DEV_OTP: ${ALLOW_DEV_OTP:-1}
     ports:
       - "4000:4000"
     deploy:
