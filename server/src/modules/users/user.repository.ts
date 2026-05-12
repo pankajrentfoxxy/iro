@@ -69,6 +69,70 @@ export class UserRepository {
     if (patch.daysActive) data.daysActive = { increment: patch.daysActive };
     return prisma.user.update({ where: { id }, data, include: userInclude });
   }
+
+  /**
+   * BFS load of direct invitees (`referredById`) up to depth/node caps for referral tree APIs.
+   */
+  async buildReferralSubtree(
+    rootId: string,
+    opts?: { maxDepth?: number; maxNodes?: number; maxPerLevel?: number },
+  ) {
+    const maxDepth = Math.max(1, opts?.maxDepth ?? 25);
+    const maxNodes = Math.max(2, opts?.maxNodes ?? 2500);
+    const maxPerLevel = Math.max(10, opts?.maxPerLevel ?? 500);
+
+    const root = await prisma.user.findUnique({
+      where: { id: rootId },
+      select: {
+        id: true,
+        fullName: true,
+        role: { select: { levelCode: true } },
+      },
+    });
+    if (!root) return null;
+
+    const nodes = new Map<string, { fullName: string; levelCode: string | null }>();
+    nodes.set(root.id, { fullName: root.fullName, levelCode: root.role?.levelCode ?? null });
+
+    const childrenByParent = new Map<string, string[]>();
+    let frontier: string[] = [root.id];
+    let depth = 0;
+
+    while (frontier.length > 0 && depth < maxDepth && nodes.size < maxNodes) {
+      const batch = await prisma.user.findMany({
+        where: { referredById: { in: frontier } },
+        select: {
+          id: true,
+          fullName: true,
+          referredById: true,
+          role: { select: { levelCode: true } },
+        },
+        orderBy: [{ referredById: "asc" }, { createdAt: "asc" }],
+        take: maxPerLevel,
+      });
+
+      if (!batch.length) break;
+
+      const nextFrontier: string[] = [];
+      for (const u of batch) {
+        if (nodes.size >= maxNodes) break;
+        const parentId = u.referredById;
+        if (!parentId) continue;
+
+        if (!nodes.has(u.id)) {
+          nodes.set(u.id, { fullName: u.fullName, levelCode: u.role?.levelCode ?? null });
+        }
+        if (!childrenByParent.has(parentId)) childrenByParent.set(parentId, []);
+        childrenByParent.get(parentId)!.push(u.id);
+        nextFrontier.push(u.id);
+      }
+
+      frontier = nextFrontier;
+      depth++;
+    }
+
+    return { rootId: root.id, nodes, childrenByParent };
+  }
 }
 
 export const userRepository = new UserRepository();

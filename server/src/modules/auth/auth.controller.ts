@@ -67,6 +67,16 @@ export async function getMe(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+export async function getMyReferralTree(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = req.user!.id;
+    const out = await authService.myReferralTree(userId);
+    ok(res, out);
+  } catch (e) {
+    next(e);
+  }
+}
+
 export async function patchMe(req: Request, res: Response, next: NextFunction) {
   try {
     const body = parse(updateProfileSchema, req.body);

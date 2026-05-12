@@ -46,6 +46,13 @@ type UserRow = NonNullable<Awaited<ReturnType<typeof userRepository.findById>>> 
   blockLabel?: string | null;
 };
 
+export type ReferralTreeNodeDto = {
+  id: string;
+  name: string;
+  role: string;
+  children?: ReferralTreeNodeDto[];
+};
+
 function refreshKey(jti: string) {
   return `refresh:${jti}`;
 }
@@ -224,6 +231,32 @@ export class AuthService {
     const user = await userRepository.findById(userId);
     if (!user) throw new NotFoundError("User");
     return this.publicUser(user as UserRow);
+  }
+
+  async myReferralTree(userId: string): Promise<{ tree: ReferralTreeNodeDto }> {
+    const flat = await userRepository.buildReferralSubtree(userId);
+    if (!flat) throw new NotFoundError("User");
+
+    const roleLabel = (code: string | null) => {
+      if (!code) return "L8";
+      const m = code.trim().toUpperCase().match(/L?(\d+)/);
+      if (!m) return "L8";
+      return `L${m[1]}`;
+    };
+
+    const toNode = (id: string): ReferralTreeNodeDto => {
+      const meta = flat.nodes.get(id);
+      const childIds = flat.childrenByParent.get(id) ?? [];
+      const children = childIds.map(toNode);
+      return {
+        id,
+        name: meta?.fullName ?? "",
+        role: roleLabel(meta?.levelCode ?? null),
+        ...(children.length ? { children } : {}),
+      };
+    };
+
+    return { tree: toNode(flat.rootId) };
   }
 
   async updateProfile(userId: string, input: UpdateProfileInput) {
