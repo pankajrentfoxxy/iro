@@ -1,6 +1,6 @@
 /**
  * Public dashboard - no auth, aggregate stats only
- */
+*/
 
 import { Router, Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';

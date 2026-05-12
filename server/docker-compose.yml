@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: iro-server-postgres
+    environment:
+      POSTGRES_USER: iro
+      POSTGRES_PASSWORD: iro
+      POSTGRES_DB: iro_app
+    ports:
+      - "5433:5432"
+    volumes:
+      - iro_server_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U iro -d iro_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: iro-server-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - iro_server_redisdata:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iro-server-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://iro:iro@postgres:5432/iro_app?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: change-me-access-min-32-chars-long!!
+      JWT_REFRESH_SECRET: change-me-refresh-min-32-chars!!
+      AES_256_KEY_BASE64: DKVXUM1w3tP9ZXZbSIguHcR8QzH1L4wZcVX0E1/m1gY=
+      CORS_ORIGIN: "*"
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:'+(process.env.PORT||'4000')+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 40s
+
+  worker:
+    profiles: [workers]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: iro-server-worker
+    depends_on:
+      api:
+        condition: service_healthy
+    entrypoint: ["node"]
+    command: ["dist/workers/index.js"]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://iro:iro@postgres:5432/iro_app?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: change-me-access-min-32-chars-long!!
+      JWT_REFRESH_SECRET: change-me-refresh-min-32-chars!!
+      AES_256_KEY_BASE64: DKVXUM1w3tP9ZXZbSIguHcR8QzH1L4wZcVX0E1/m1gY=
+      CORS_ORIGIN: "*"
+
+volumes:
+  iro_server_pgdata:
+  iro_server_redisdata:
