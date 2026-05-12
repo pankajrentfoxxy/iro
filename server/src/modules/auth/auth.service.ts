@@ -26,6 +26,7 @@ import { hashPhone } from "../../lib/crypto.js";
 import { logger } from "../../lib/logger.js";
 import { env } from "../../config/env.js";
 import { authRepository } from "./auth.repository.js";
+import { referralRepository } from "../referrals/referral.repository.js";
 import { userRepository } from "../users/user.repository.js";
 import type { RegisterInput, UpdateProfileInput } from "./auth.validation.js";
 
@@ -56,6 +57,8 @@ export type ReferralTreeNodeDto = {
 function refreshKey(jti: string) {
   return `refresh:${jti}`;
 }
+
+type LiveReferralStats = { totalReferrals: number; networkSize: number };
 
 export class AuthService {
   private async resolveJurisdictionFromLabels(input: {
@@ -122,9 +125,10 @@ export class AuthService {
     if (user) {
       if (user.status !== "ACTIVE") throw new ForbiddenError("Account not active");
       const tokens = await this.issueTokens(user.id);
+      const live = await this.liveReferralStats(user.id);
       return {
         needsRegistration: false as const,
-        user: this.publicUser(user as UserRow),
+        user: this.publicUser(user as UserRow, live),
         ...tokens,
       };
     }
@@ -197,7 +201,8 @@ export class AuthService {
     });
 
     const tokens = await this.issueTokens(user.id);
-    return { user: this.publicUser(user as UserRow), ...tokens };
+    const live = await this.liveReferralStats(user.id);
+    return { user: this.publicUser(user as UserRow, live), ...tokens };
   }
 
   async issueTokens(userId: string) {
@@ -230,7 +235,8 @@ export class AuthService {
   async me(userId: string) {
     const user = await userRepository.findById(userId);
     if (!user) throw new NotFoundError("User");
-    return this.publicUser(user as UserRow);
+    const live = await this.liveReferralStats(userId);
+    return this.publicUser(user as UserRow, live);
   }
 
   async myReferralTree(userId: string): Promise<{ tree: ReferralTreeNodeDto }> {
@@ -306,10 +312,19 @@ export class AuthService {
       data: data as Prisma.UserUncheckedUpdateInput,
       include: userInclude,
     });
-    return this.publicUser(updated as UserRow);
+    const live = await this.liveReferralStats(userId);
+    return this.publicUser(updated as UserRow, live);
   }
 
-  private publicUser(user: UserRow) {
+  private async liveReferralStats(userId: string): Promise<LiveReferralStats> {
+    const [networkSize, totalReferrals] = await Promise.all([
+      referralRepository.networkSizeRaw(userId),
+      prisma.user.count({ where: { referredById: userId } }),
+    ]);
+    return { networkSize, totalReferrals };
+  }
+
+  private publicUser(user: UserRow, live?: LiveReferralStats) {
     return {
       id: user.id,
       fullName: user.fullName,
@@ -336,8 +351,8 @@ export class AuthService {
       stats: {
         leadershipScore: user.leadershipScore,
         peerRatingAvg: user.peerRatingAvg,
-        totalReferrals: user.totalReferrals,
-        networkSize: user.networkSize,
+        totalReferrals: live?.totalReferrals ?? user.totalReferrals,
+        networkSize: live?.networkSize ?? user.networkSize,
         tasksCompleted: user.tasksCompleted,
         surveysSubmitted: user.surveysSubmitted,
         daysActive: user.daysActive,

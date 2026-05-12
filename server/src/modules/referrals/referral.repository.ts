@@ -16,16 +16,17 @@ export class ReferralRepository {
     });
   }
 
+  /** Full downline size via `users.referred_by` (matches referral tree APIs). */
   async networkSizeRaw(rootUserId: string): Promise<number> {
     const rows = await prisma.$queryRaw<{ c: bigint }[]>`
       WITH RECURSIVE sub AS (
-        SELECT r.referred_user_id AS id
-        FROM referrals r
-        WHERE r.referrer_user_id = ${rootUserId}::uuid
+        SELECT u.id
+        FROM users u
+        WHERE u.referred_by::text = ${rootUserId}::text
         UNION
-        SELECT r.referred_user_id
-        FROM referrals r
-        INNER JOIN sub s ON r.referrer_user_id = s.id
+        SELECT u.id
+        FROM users u
+        INNER JOIN sub s ON u.referred_by::text = s.id::text
       )
       SELECT COUNT(*)::bigint AS c FROM sub;
     `;

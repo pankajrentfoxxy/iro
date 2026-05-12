@@ -84,6 +84,19 @@ export class AuthRepository {
         where: { id: params.referredById },
         data: { totalReferrals: { increment: 1 } },
       });
+      let currentAncestor: string | null = params.referredById;
+      while (currentAncestor) {
+        const id: string = currentAncestor;
+        await prisma.user.update({
+          where: { id },
+          data: { networkSize: { increment: 1 } },
+        });
+        const uplink: { referredById: string | null } | null = await prisma.user.findUnique({
+          where: { id },
+          select: { referredById: true },
+        });
+        currentAncestor = uplink?.referredById ?? null;
+      }
     }
 
     return user;
