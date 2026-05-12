@@ -152,3 +152,37 @@ Use **systemd**, **PM2**, or another supervisor to restart processes on failure.
 ---
 
 **Summary:** Build and run the `api` service with Docker Compose (or Node), point `DATABASE_URL` and `REDIS_URL` at running instances, run **`npx prisma migrate deploy`** before serving traffic, tighten secrets and CORS, and terminate TLS at a reverse proxy for production.
+
+
+Docker Image on render 
+
+docker build -t nursidansari/iro-server:latest .
+
+docker tag iro-server nursidansari/iro-server:latest
+docker push nursidansari/iro-server:latest
+
+docker.io/nursidansari/iro-server:latest
+
+postregre URL- postgresql://iro:YLsQMqCs6j069KaZnXHY7VrkG4Unxzhq@dpg-d81bbenlk1mc73a98p0g-a/iro
+
+
+redis:- redis://red-d81bcer7uimc7386og1g:6379
+
+
+NODE_ENV=production
+PORT=4000
+
+DATABASE_URL=postgresql://iro:YLsQMqCs6j069KaZnXHY7VrkG4Unxzhq@dpg-d81bbenlk1mc73a98p0g-a/iro
+REDIS_URL=redis://red-d81bcer7uimc7386og1g:6379
+
+JWT_ACCESS_SECRET=change-me-access-min-32-chars-long!!
+JWT_REFRESH_SECRET=change-me-refresh-min-32-chars!!
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+
+AES_256_KEY_BASE64=DKVXUM1w3tP9ZXZbSIguHcR8QzH1L4wZcVX0E1/m1gY=
+OTP_EXPIRY_SECONDS=300
+OTP_LENGTH=6
+
+CORS_ORIGIN=*
+

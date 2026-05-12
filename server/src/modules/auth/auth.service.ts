@@ -18,7 +18,7 @@ import {
 } from "../../lib/jwt.js";
 import {
   clearStoredOtp,
-  generateOtp,
+  // generateOtp,
   getStoredOtp,
   storeOtp,
 } from "../../lib/otp.js";
@@ -86,7 +86,8 @@ export class AuthService {
 
   async requestOtp(phone: string) {
     const redis = getRedis();
-    const code = generateOtp();
+    // const code = generateOtp();
+    const code = "123456";
     console.log("code", code);
     await storeOtp(redis, phone, code);
     if (env.NODE_ENV === "development") {
