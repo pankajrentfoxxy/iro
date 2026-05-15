@@ -43,9 +43,15 @@ export class TaskService {
     });
   }
 
-  async list(viewer: AuthUser, status?: string) {
+  async list(
+    viewer: AuthUser,
+    status?: string,
+    opts?: { assignedToMeOnly?: boolean; dueToday?: boolean },
+  ) {
     return taskRepository.listForViewer(viewer, {
       status: status as "PENDING" | "IN_PROGRESS" | "COMPLETED" | undefined,
+      assignedToMeOnly: opts?.assignedToMeOnly ?? false,
+      dueToday: opts?.dueToday ?? false,
     });
   }
 

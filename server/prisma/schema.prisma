@@ -101,9 +101,31 @@ model HierarchyLocation {
   electionsBlock    Election[] @relation("ElectionBlock")
   electionsBooth    Election[] @relation("ElectionBooth")
 
+  boothDetail BoothDetail?
+
   @@index([type])
   @@index([parentId])
   @@map("hierarchy_locations")
+}
+
+/// Booth worker dashboard data tied to a hierarchy BOOTH row (voters, pulse mood).
+model BoothDetail {
+  id              String @id @default(uuid())
+  boothLocationId String @unique @map("booth_location_id")
+  boothLocation   HierarchyLocation @relation(fields: [boothLocationId], references: [id], onDelete: Cascade)
+
+  boothNumber      String? @map("booth_number")
+  registeredVoters Int     @default(900) @map("registered_voters")
+
+  lastMoodSentiment SurveySentiment? @map("last_mood_sentiment")
+  lastMoodNote      String?          @map("last_mood_note")
+  lastMoodAt        DateTime?        @map("last_mood_at")
+  lastMoodByUserId  String?          @map("last_mood_by_user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("booth_details")
 }
 
 model User {
@@ -224,6 +246,7 @@ model Task {
   gpsLong      Decimal? @map("gps_long") @db.Decimal(12, 7)
   proofImageUrl String? @map("proof_image_url")
   completedAt  DateTime? @map("completed_at")
+  dueDate      DateTime? @map("due_date")
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -231,6 +254,7 @@ model Task {
   assignedTo User? @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
 
   @@index([assignedToId, status])
+  @@index([assignedToId, dueDate])
   @@index([assignedById])
   @@map("tasks")
 }

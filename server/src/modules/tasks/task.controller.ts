@@ -27,7 +27,16 @@ export async function postTask(req: Request, res: Response, next: NextFunction) 
 export async function getTasks(req: Request, res: Response, next: NextFunction) {
   try {
     const status = typeof req.query.status === "string" ? req.query.status : undefined;
-    const tasks = await taskService.list(req.user!, status);
+    const assignedTo = typeof req.query.assigned_to === "string" ? req.query.assigned_to : undefined;
+    const dueTodayRaw = req.query.due_today;
+    const dueToday =
+      dueTodayRaw === "true" || dueTodayRaw === "1" || dueTodayRaw === "yes";
+    const assignedToMeOnly = assignedTo === "me";
+
+    const tasks = await taskService.list(req.user!, status, {
+      assignedToMeOnly,
+      dueToday,
+    });
     ok(res, { tasks });
   } catch (e) {
     next(e);

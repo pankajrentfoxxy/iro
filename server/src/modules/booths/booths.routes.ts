@@ -2,9 +2,13 @@ import { Router } from "express";
 import { authMiddleware } from "../../middleware/auth.middleware.js";
 import { prisma } from "../../config/db.js";
 import { ok } from "../../lib/response.js";
+import { getBoothById, getMyBoothDashboard, patchBoothMood } from "./booths.controller.js";
 
 const r = Router();
+
 r.use(authMiddleware);
+
+/** Directory listing for dropdowns */
 r.get("/", async (req, res, next) => {
   try {
     const parentId =
@@ -21,5 +25,9 @@ r.get("/", async (req, res, next) => {
     next(e);
   }
 });
+
+r.get("/me", getMyBoothDashboard);
+r.get("/:boothLocationId", getBoothById);
+r.patch("/:boothLocationId/mood", patchBoothMood);
 
 export const boothsRouter = r;

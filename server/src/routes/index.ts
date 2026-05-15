@@ -10,6 +10,7 @@ import { hierarchyRouter } from "../modules/hierarchy/hierarchy.routes.js";
 import { campaignsRouter } from "../modules/campaigns/campaigns.routes.js";
 import { notificationsRouter } from "../modules/notifications/notifications.routes.js";
 import { boothsRouter } from "../modules/booths/booths.routes.js";
+import { usersRouter } from "../modules/users/users.routes.js";
 
 const api = Router();
 
@@ -28,5 +29,6 @@ api.use("/hierarchy", hierarchyRouter);
 api.use("/campaigns", campaignsRouter);
 api.use("/notifications", notificationsRouter);
 api.use("/booths", boothsRouter);
+api.use("/users", usersRouter);
 
 export { api };

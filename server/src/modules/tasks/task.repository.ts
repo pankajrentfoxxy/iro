@@ -34,20 +34,54 @@ export class TaskRepository {
     });
   }
 
-  async listForViewer(viewer: AuthUser, filters: { status?: TaskStatus }) {
-    const assigneeScope = jurisdictionWhere(viewer);
-    const assignees = await prisma.user.findMany({
-      where: assigneeScope,
-      select: { id: true },
-    });
-    const ids = assignees.map((u) => u.id);
+  async listForViewer(
+    viewer: AuthUser,
+    filters: {
+      status?: TaskStatus;
+      assignedToMeOnly?: boolean;
+      dueToday?: boolean;
+    },
+  ) {
+    let assigneeIds: string[];
+    if (filters.assignedToMeOnly) {
+      assigneeIds = [viewer.id];
+    } else {
+      const assigneeScope = jurisdictionWhere(viewer);
+      const assignees = await prisma.user.findMany({
+        where: assigneeScope,
+        select: { id: true },
+      });
+      assigneeIds = assignees.map((u) => u.id);
+    }
+
+    const dayStart = new Date();
+    dayStart.setUTCHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
+
+    const andParts: Prisma.TaskWhereInput[] = [
+      {
+        OR: [{ assignedToId: { in: assigneeIds } }, { assignedById: viewer.id }],
+      },
+    ];
+
+    if (filters.status) andParts.push({ status: filters.status });
+
+    if (filters.dueToday) {
+      andParts.push({ status: { not: "COMPLETED" } });
+      andParts.push({
+        OR: [
+          { dueDate: { gte: dayStart, lt: dayEnd } },
+          { dueDate: null, createdAt: { gte: dayStart, lt: dayEnd } },
+        ],
+      });
+    }
+
+    const where: Prisma.TaskWhereInput = { AND: andParts };
 
     return prisma.task.findMany({
-      where: {
-        OR: [{ assignedToId: { in: ids } }, { assignedById: viewer.id }],
-        ...(filters.status ? { status: filters.status } : {}),
-      },
-      orderBy: { createdAt: "desc" },
+      where,
+      orderBy: [{ dueDate: "asc" }, { createdAt: "desc" }],
       include: {
         assignedBy: { select: { id: true, fullName: true } },
         assignedTo: { select: { id: true, fullName: true } },
