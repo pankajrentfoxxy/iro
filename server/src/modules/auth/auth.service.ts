@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
+import { Prisma } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
-import type { Prisma } from "@prisma/client";
 import { prisma } from "../../config/db.js";
 import { getRedis } from "../../config/redis.js";
 import {
@@ -27,6 +27,8 @@ import { logger } from "../../lib/logger.js";
 import { env } from "../../config/env.js";
 import { authRepository } from "./auth.repository.js";
 import { referralRepository } from "../referrals/referral.repository.js";
+import { incrementReferralInviteUsesTx } from "../referral-invites/referralInvite.repository.js";
+import { resolveRegistrationReferral } from "../referral-invites/referralInvite.registration.js";
 import { userRepository } from "../users/user.repository.js";
 import type { RegisterInput, UpdateProfileInput } from "./auth.validation.js";
 
@@ -152,14 +154,6 @@ export class AuthService {
     const existing = await userRepository.findByPhoneHash(payload.phoneHash);
     if (existing) throw new ValidationError("User already registered");
 
-    let referredById: string | null = null;
-    if (input.referralCode) {
-      const ref = await userRepository.findByReferralCode(input.referralCode);
-      if (!ref) throw new ValidationError("Invalid referral code");
-      referredById = ref.id;
-    }
-
-    const volunteer = await prisma.role.findUnique({ where: { levelCode: "L8" } });
     const passwordHash =
       input.password && input.password.length > 0
         ? await bcrypt.hash(input.password, 12)
@@ -168,37 +162,103 @@ export class AuthService {
     const [y, m, d] = input.dob.split("-").map(Number);
     const dateOfBirth = new Date(Date.UTC(y, m - 1, d));
 
-    const resolved = await this.resolveJurisdictionFromLabels({
+    const jurisdiction = await this.resolveJurisdictionFromLabels({
       stateName: input.stateName,
       districtName: input.districtName,
       blockName: input.blockName,
     });
 
-    const stateId = input.stateId ?? resolved.stateId;
-    const districtId = input.districtId ?? resolved.districtId;
-    const blockId = input.blockId ?? resolved.blockId;
+    const stateId = input.stateId ?? jurisdiction.stateId;
+    const districtId = input.districtId ?? jurisdiction.districtId;
+    const blockId = input.blockId ?? jurisdiction.blockId;
 
-    const user = await authRepository.createUser({
-      fullName: input.fullName,
-      phone: input.phone,
-      email: input.email,
-      passwordHash,
-      referredById,
-      roleId: volunteer?.id ?? null,
-      dateOfBirth,
-      gender: input.gender,
-      village: input.village.trim(),
-      pincode: input.pincode,
-      occupation: input.occupation,
-      education: input.education,
-      stateLabel: input.stateName,
-      districtLabel: input.districtName,
-      blockLabel: input.blockName,
-      stateId,
-      districtId,
-      blockId,
-      boothId: input.boothId ?? null,
-    });
+    type InviteUsedPayload = {
+      inviteId: string;
+      creatorUserId: string;
+      targetRole: string;
+      joinedUserId: string;
+    };
+
+    const { user, inviteUsedPayload } = await prisma.$transaction(
+      async (tx) => {
+        const referralResolved = await resolveRegistrationReferral(tx, input.referralCode);
+
+        const newUser = await authRepository.createUser(tx, {
+          fullName: input.fullName,
+          phone: input.phone,
+          email: input.email,
+          passwordHash,
+          referredById: referralResolved.referredById,
+          roleId: referralResolved.roleId,
+          referralInviteUsedId: referralResolved.referralInviteUsedId,
+          dateOfBirth,
+          gender: input.gender,
+          village: input.village.trim(),
+          pincode: input.pincode,
+          occupation: input.occupation,
+          education: input.education,
+          stateLabel: input.stateName,
+          districtLabel: input.districtName,
+          blockLabel: input.blockName,
+          stateId,
+          districtId,
+          blockId,
+          boothId: input.boothId ?? null,
+        });
+
+        let inviteUsedPayload: InviteUsedPayload | null = null;
+        if (referralResolved.referralInviteUsedId) {
+          await incrementReferralInviteUsesTx(tx, referralResolved.referralInviteUsedId);
+          inviteUsedPayload = {
+            inviteId: referralResolved.referralInviteUsedId,
+            creatorUserId: referralResolved.referredById!,
+            targetRole: referralResolved.targetRoleLevel ?? "",
+            joinedUserId: newUser.id,
+          };
+        }
+
+        return { user: newUser, inviteUsedPayload };
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        timeout: 25_000,
+      },
+    );
+
+    try {
+      await prisma.auditLog.create({
+        data: {
+          userId: user.id,
+          method: "POST",
+          path: "/auth/register",
+          statusCode: 201,
+          metadata: {
+            referralInviteUsedId: inviteUsedPayload?.inviteId ?? null,
+            referredById: user.referredById ?? null,
+            roleLevel: user.role?.levelCode ?? null,
+          },
+        },
+      });
+    } catch {
+      /* audit failures must not block signup */
+    }
+
+    try {
+      const redis = getRedis();
+      if (inviteUsedPayload) {
+        await redis.publish(
+          "iro:events",
+          JSON.stringify({ type: "referral_invite_used", data: inviteUsedPayload }),
+        );
+      }
+      const totalCount = await prisma.user.count({ where: { status: "ACTIVE" } });
+      await redis.publish(
+        "iro:events",
+        JSON.stringify({ type: "total_reformers", data: { count: totalCount } }),
+      );
+    } catch {
+      /* ignore stats broadcast failures */
+    }
 
     const tokens = await this.issueTokens(user.id);
     const live = await this.liveReferralStats(user.id);

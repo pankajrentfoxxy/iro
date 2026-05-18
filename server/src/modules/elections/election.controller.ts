@@ -5,6 +5,7 @@ import { ValidationError } from "../../lib/errors.js";
 import {
   createElectionSchema,
   electionService,
+  nominateSchema,
   registerCandidateSchema,
   voteSchema,
 } from "./election.service.js";
@@ -13,6 +14,34 @@ function parse<T>(schema: z.ZodType<T>, body: unknown): T {
   const r = schema.safeParse(body);
   if (!r.success) throw new ValidationError("Invalid body", r.error.flatten());
   return r.data;
+}
+
+export async function getElections(req: Request, res: Response, next: NextFunction) {
+  try {
+    const elections = await electionService.listElections(req.user!);
+    ok(res, { elections });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function getElectionResults(req: Request, res: Response, next: NextFunction) {
+  try {
+    const results = await electionService.electionResults(req.params.id!);
+    ok(res, { results });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function postNominate(req: Request, res: Response, next: NextFunction) {
+  try {
+    const body = parse(nominateSchema, req.body);
+    const nominee = await electionService.selfNominate(req.params.id!, req.user!, body.statement);
+    ok(res, { nominee }, 201);
+  } catch (e) {
+    next(e);
+  }
 }
 
 export async function postElection(req: Request, res: Response, next: NextFunction) {

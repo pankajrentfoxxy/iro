@@ -11,6 +11,8 @@ import { campaignsRouter } from "../modules/campaigns/campaigns.routes.js";
 import { notificationsRouter } from "../modules/notifications/notifications.routes.js";
 import { boothsRouter } from "../modules/booths/booths.routes.js";
 import { usersRouter } from "../modules/users/users.routes.js";
+import { eventsRouter } from "../modules/events/events.routes.js";
+import { referralInviteRouter } from "../modules/referral-invites/referralInvite.routes.js";
 
 const api = Router();
 
@@ -19,7 +21,9 @@ api.get("/health", (_req, res) => {
 });
 
 api.use("/auth", authRouter);
+api.use("/referral-invites", referralInviteRouter);
 api.use("/referral", referralRouter);
+api.use("/referrals", referralRouter);
 api.use("/tasks", taskRouter);
 api.use("/surveys", surveyRouter);
 api.use("/elections", electionRouter);
@@ -28,6 +32,7 @@ api.use("/analytics", analyticsRouter);
 api.use("/hierarchy", hierarchyRouter);
 api.use("/campaigns", campaignsRouter);
 api.use("/notifications", notificationsRouter);
+api.use("/events", eventsRouter);
 api.use("/booths", boothsRouter);
 api.use("/users", usersRouter);
 

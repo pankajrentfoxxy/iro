@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { prisma } from "../../config/db.js";
 import type { AuthUser } from "../../types/auth.js";
 
@@ -58,6 +59,53 @@ export class AnalyticsService {
         districtId: true,
       },
     });
+  }
+
+  async dashboard(viewer: AuthUser) {
+    const code = viewer.role?.levelCode ?? "";
+
+    let jurisdictionWhere: Prisma.UserWhereInput = {};
+    if (code === "L6" && viewer.blockId) jurisdictionWhere = { blockId: viewer.blockId };
+    else if (code === "L5" && viewer.districtId) jurisdictionWhere = { districtId: viewer.districtId };
+    else if ((code === "L4" || code === "L3") && viewer.stateId)
+      jurisdictionWhere = { stateId: viewer.stateId };
+
+    const scoped = Object.keys(jurisdictionWhere).length > 0;
+
+    const [totalReformers, tasksCompleted, surveysSubmitted] = await Promise.all([
+      prisma.user.count({ where: jurisdictionWhere }),
+      prisma.task.count({
+        where: {
+          status: "COMPLETED",
+          ...(scoped ? { assignedTo: jurisdictionWhere } : {}),
+        },
+      }),
+      prisma.survey.count({
+        where: scoped ? { user: jurisdictionWhere } : {},
+      }),
+    ]);
+
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    type GrowthRow = { date: Date; count: bigint };
+    const growthData = await prisma.$queryRaw<GrowthRow[]>`
+      SELECT created_at::date AS date, COUNT(*)::bigint AS count
+      FROM users
+      WHERE created_at >= ${thirtyDaysAgo}
+      GROUP BY created_at::date
+      ORDER BY date ASC
+    `;
+
+    return {
+      totalReformers,
+      tasksCompleted,
+      surveysSubmitted,
+      growthData: growthData.map((r) => ({
+        date: r.date.toISOString().slice(0, 10),
+        count: Number(r.count),
+      })),
+    };
   }
 }
 

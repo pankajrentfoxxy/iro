@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { authMiddleware } from "../../middleware/auth.middleware.js";
-import { ok } from "../../lib/response.js";
+import { listNotifications, markNotificationsReadAll } from "./notifications.controller.js";
 
 const r = Router();
+
 r.use(authMiddleware);
-r.get("/", (_req, res) => ok(res, { message: "Use worker + socket channel iro:events for realtime notifications" }));
+r.get("/", listNotifications);
+r.patch("/read-all", markNotificationsReadAll);
 
 export const notificationsRouter = r;

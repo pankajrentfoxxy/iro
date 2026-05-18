@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { electionRepository } from "./election.repository.js";
 import { prisma } from "../../config/db.js";
 import { ForbiddenError, NotFoundError, ValidationError } from "../../lib/errors.js";
@@ -20,11 +21,95 @@ export const registerCandidateSchema = z.object({
   userId: z.string().uuid(),
 });
 
-export const voteSchema = z.object({
-  candidateUserId: z.string().uuid(),
+export const voteSchema = z
+  .object({
+    candidateUserId: z.string().uuid().optional(),
+    candidateId: z.string().uuid().optional(),
+  })
+  .refine((d) => !!(d.candidateUserId || d.candidateId), { message: "candidate required" });
+
+export const nominateSchema = z.object({
+  statement: z.string().max(8000).optional().nullable(),
 });
 
 export class ElectionService {
+  async listElections(viewer: AuthUser) {
+    const or: Prisma.ElectionWhereInput[] = [];
+    if (viewer.stateId) or.push({ stateId: viewer.stateId });
+    if (viewer.districtId) or.push({ districtId: viewer.districtId });
+    if (viewer.blockId) or.push({ blockId: viewer.blockId });
+    if (viewer.boothId) or.push({ boothId: viewer.boothId });
+
+    return prisma.election.findMany({
+      where: or.length ? { OR: or } : {},
+      include: {
+        candidates: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                profileImage: true,
+                totalReferrals: true,
+              },
+            },
+          },
+        },
+        _count: { select: { votes: true } },
+      },
+      orderBy: { startDate: "desc" },
+    });
+  }
+
+  async electionResults(electionId: string) {
+    const tallies = await prisma.electionVote.groupBy({
+      by: ["candidateUserId"],
+      where: { electionId },
+      _count: { candidateUserId: true },
+    });
+
+    const ids = tallies.map((t) => t.candidateUserId);
+    const rows = await prisma.user.findMany({
+      where: { id: { in: ids } },
+      select: { id: true, fullName: true, profileImage: true, totalReferrals: true },
+    });
+
+    return tallies
+      .map((t) => {
+        const u = rows.find((r) => r.id === t.candidateUserId);
+        return {
+          id: u?.id,
+          name: u?.fullName,
+          profilePhotoUrl: u?.profileImage,
+          directCount: u?.totalReferrals ?? 0,
+          voteCount: t._count.candidateUserId,
+        };
+      })
+      .sort((a, b) => b.voteCount - a.voteCount);
+  }
+
+  async selfNominate(electionId: string, viewer: AuthUser, statement?: string | null) {
+    const election = await electionRepository.findById(electionId);
+    if (!election) throw new NotFoundError("Election not found");
+    if (election.status !== "UPCOMING" && election.status !== "ACTIVE") {
+      throw new ValidationError("Election not open for registration");
+    }
+
+    const directRefs = await prisma.user.count({ where: { referredById: viewer.id } });
+    if (directRefs < 50) throw new ForbiddenError("Need 50+ direct referrals to nominate");
+
+    const user = await prisma.user.findUnique({
+      where: { id: viewer.id },
+      select: { leadershipScore: true },
+    });
+    if (!user) throw new NotFoundError("User");
+
+    return electionRepository.upsertCandidate(electionId, viewer.id, {
+      leadershipScore: Number(user.leadershipScore),
+      statement: statement ?? undefined,
+    });
+  }
+
   async createElection(input: z.infer<typeof createElectionSchema>, by: AuthUser) {
     return electionRepository.create({
       title: input.title,
@@ -55,11 +140,9 @@ export class ElectionService {
     });
     if (!user) throw new NotFoundError("User not found");
 
-    return electionRepository.upsertCandidate(
-      electionId,
-      body.userId,
-      Number(user.leadershipScore),
-    );
+    return electionRepository.upsertCandidate(electionId, body.userId, {
+      leadershipScore: Number(user.leadershipScore),
+    });
   }
 
   async vote(electionId: string, body: z.infer<typeof voteSchema>, voter: AuthUser) {
@@ -67,13 +150,16 @@ export class ElectionService {
     if (!election) throw new NotFoundError("Election not found");
     if (election.status !== "ACTIVE") throw new ValidationError("Election is not active");
 
+    const candidateUserId = body.candidateUserId ?? body.candidateId;
+    if (!candidateUserId) throw new ValidationError("candidate required");
+
     const candidate = await prisma.electionCandidate.findUnique({
-      where: { electionId_userId: { electionId, userId: body.candidateUserId } },
+      where: { electionId_userId: { electionId, userId: candidateUserId } },
     });
     if (!candidate) throw new ValidationError("Candidate not standing in this election");
 
     try {
-      return await electionRepository.castVote(electionId, voter.id, body.candidateUserId);
+      return await electionRepository.castVote(electionId, voter.id, candidateUserId);
     } catch {
       throw new ValidationError("Vote already cast");
     }

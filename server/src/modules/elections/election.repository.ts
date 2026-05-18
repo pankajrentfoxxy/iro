@@ -15,11 +15,23 @@ export class ElectionRepository {
     return prisma.election.create({ data });
   }
 
-  async upsertCandidate(electionId: string, userId: string, leadershipScore?: number) {
+  async upsertCandidate(
+    electionId: string,
+    userId: string,
+    opts?: { leadershipScore?: number; statement?: string | null },
+  ) {
     return prisma.electionCandidate.upsert({
       where: { electionId_userId: { electionId, userId } },
-      create: { electionId, userId, leadershipScore: leadershipScore ?? undefined },
-      update: { leadershipScore: leadershipScore ?? undefined },
+      create: {
+        electionId,
+        userId,
+        leadershipScore: opts?.leadershipScore ?? undefined,
+        statement: opts?.statement ?? undefined,
+      },
+      update: {
+        leadershipScore: opts?.leadershipScore ?? undefined,
+        ...(opts?.statement !== undefined ? { statement: opts.statement } : {}),
+      },
     });
   }
 

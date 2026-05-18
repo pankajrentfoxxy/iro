@@ -62,7 +62,8 @@ ENV NODE_ENV=production
 
 COPY package.json package-lock.json ./
 
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev \
+  && npm install prisma@5.22.0 --no-save
 
 COPY prisma ./prisma/
 

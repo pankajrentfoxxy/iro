@@ -15,7 +15,8 @@
     "db:studio": "prisma studio",
     "docker:up": "docker compose up --build -d",
     "docker:down": "docker compose down",
-    "docker:logs": "docker compose logs -f api"
+    "docker:logs": "docker compose logs -f api",
+    "docker:migrate": "docker compose run --rm prisma-migrate"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

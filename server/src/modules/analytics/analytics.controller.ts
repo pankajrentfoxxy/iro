@@ -20,3 +20,12 @@ export async function getTopInfluencers(req: Request, res: Response, next: NextF
     next(e);
   }
 }
+
+export async function getAnalyticsDashboard(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await analyticsService.dashboard(req.user!);
+    ok(res, data);
+  } catch (e) {
+    next(e);
+  }
+}

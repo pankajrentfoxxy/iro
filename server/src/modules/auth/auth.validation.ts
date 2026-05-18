@@ -33,7 +33,7 @@ export const registerSchema = z.object({
   fullName: z.string().min(2).max(150),
   email: z.string().email().optional().nullable(),
   password: z.string().min(8).max(128).optional().nullable(),
-  referralCode: z.string().min(4).max(32).optional().nullable(),
+  referralCode: z.string().min(4).max(48).optional().nullable(),
   dob: isoDateString,
   gender: z.string().min(1).max(32),
   village: z.string().min(1).max(260),

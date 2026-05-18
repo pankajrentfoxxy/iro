@@ -47,6 +47,41 @@ async function main() {
       parentId: india.id,
     },
   });
+
+  const pulseQuestions = [
+    {
+      id: "q1",
+      kind: "rating",
+      label: "How motivated do you feel about outreach today?",
+      max: 5,
+    },
+    {
+      id: "q2",
+      kind: "text",
+      label: "One message you'd share with a new Reformer",
+      placeholder: "Short Hindi / English line…",
+    },
+  ];
+
+  await prisma.questionnaire.upsert({
+    where: { id: "00000000-0000-4000-8000-00000000feed" },
+    update: {
+      title: "Weekly pulse",
+      questions: pulseQuestions,
+      targetRoleLevel: null,
+      isActive: true,
+      xpReward: 75,
+    },
+    create: {
+      id: "00000000-0000-4000-8000-00000000feed",
+      title: "Weekly pulse",
+      type: "PULSE",
+      questions: pulseQuestions,
+      targetRoleLevel: null,
+      xpReward: 75,
+      isActive: true,
+    },
+  });
 }
 
 main()

@@ -1,6 +1,7 @@
 import type { Server as HttpServer } from "node:http";
 import type { Redis } from "ioredis";
 import { Server as SocketIOServer } from "socket.io";
+import { prisma } from "./db.js";
 import { env } from "./env.js";
 
 const corsOrigins =
@@ -13,28 +14,15 @@ export function createSocketServer(httpServer: HttpServer, redis: Redis): Socket
     cors: { origin: corsOrigins, methods: ["GET", "POST"] },
   });
 
-  let liveConnections = 0;
-
-  io.on("connection", (socket) => {
-    liveConnections += 1;
-    redis
-      .publish(
-        "iro:stats",
-        JSON.stringify({ type: "live_reformer_count", count: liveConnections }),
-      )
-      .catch(() => undefined);
-
-    socket.emit("stats:live_reformers", { count: liveConnections });
-
-    socket.on("disconnect", () => {
-      liveConnections = Math.max(0, liveConnections - 1);
-      redis
-        .publish(
-          "iro:stats",
-          JSON.stringify({ type: "live_reformer_count", count: liveConnections }),
-        )
-        .catch(() => undefined);
-    });
+  io.on("connection", async (socket) => {
+    try {
+      const count = await prisma.user.count({ where: { status: "ACTIVE" } });
+      socket.emit("total_reformers", { count });
+      socket.emit("stats:live_reformers", { count });
+    } catch {
+      socket.emit("total_reformers", { count: 0 });
+      socket.emit("stats:live_reformers", { count: 0 });
+    }
   });
 
   const sub = redis.duplicate();

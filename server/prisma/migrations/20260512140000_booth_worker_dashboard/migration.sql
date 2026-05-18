@@ -21,4 +21,4 @@ ALTER TABLE "booth_details" ADD CONSTRAINT "booth_details_booth_location_id_fkey
 
 ALTER TABLE "tasks" ADD COLUMN "due_date" TIMESTAMP(3);
 
-CREATE INDEX "tasks_assigned_to_id_due_date_idx" ON "tasks"("assigned_to_id", "due_date");
+CREATE INDEX "tasks_assigned_to_id_due_date_idx" ON "tasks"("assigned_to", "due_date");
