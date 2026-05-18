@@ -2,6 +2,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator adminClient {
+  provider = "prisma-client-js"
+  output   = "../../iro-admin-service/node_modules/.prisma/client"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -60,6 +65,14 @@ enum ElectionAreaType {
 enum ElectionStatus {
   UPCOMING
   ACTIVE
+  COMPLETED
+}
+
+enum AdminCampaignStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  PAUSED
   COMPLETED
 }
 
@@ -218,6 +231,7 @@ model User {
   notifications          UserNotification[]
   orgEventsCreated       OrgEvent[]           @relation("OrgEventCreator")
   orgEventRsvps          OrgEventRsvp[]
+  adminCampaignsCreated  AdminCampaign[]      @relation("AdminCampaignCreator")
 
   @@index([roleId])
   @@index([referredById])
@@ -556,6 +570,34 @@ model OrgEventRsvp {
 
   @@unique([eventId, userId])
   @@map("org_event_rsvps")
+}
+
+/// Leadership campaigns / broadcasts (admin console).
+model AdminCampaign {
+  id              String              @id @default(cuid())
+  title           String
+  description     String?
+  status          AdminCampaignStatus @default(DRAFT)
+  startsAt        DateTime?           @map("starts_at")
+  endsAt          DateTime?           @map("ends_at")
+  targetRoleLevel String?             @map("target_role_level")
+  scopeStateId    String?             @map("scope_state_id")
+  scopeDistrictId String?             @map("scope_district_id")
+  scopeBlockId    String?             @map("scope_block_id")
+  metadata        Json?
+
+  createdById String @map("created_by_id")
+  createdBy   User   @relation("AdminCampaignCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([createdById])
+  @@index([status])
+  @@index([deletedAt])
+  @@index([startsAt])
+  @@map("admin_campaigns")
 }
 
 /// Hierarchical invite codes (role assigned server-side at registration).

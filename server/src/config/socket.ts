@@ -2,16 +2,10 @@ import type { Server as HttpServer } from "node:http";
 import type { Redis } from "ioredis";
 import { Server as SocketIOServer } from "socket.io";
 import { prisma } from "./db.js";
-import { env } from "./env.js";
-
-const corsOrigins =
-  env.CORS_ORIGIN === "*"
-    ? true
-    : env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean);
 
 export function createSocketServer(httpServer: HttpServer, redis: Redis): SocketIOServer {
   const io = new SocketIOServer(httpServer, {
-    cors: { origin: corsOrigins, methods: ["GET", "POST"] },
+    cors: { origin: true, methods: ["GET", "POST"] },
   });
 
   io.on("connection", async (socket) => {

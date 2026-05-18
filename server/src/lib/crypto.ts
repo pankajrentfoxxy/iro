@@ -1,14 +1,18 @@
 import { createCipheriv, createDecipheriv, createHmac, randomBytes } from "node:crypto";
 import { env } from "../config/env.js";
+import { normalizeAes256KeyBase64Input } from "./aesKeyEnv.js";
 
 const ALGO = "aes-256-gcm";
 const IV_LEN = 12;
 const AUTH_TAG_LEN = 16;
 
 function getKey(): Buffer {
-  const raw = Buffer.from(env.AES_256_KEY_BASE64, "base64");
+  const b64 = normalizeAes256KeyBase64Input(env.AES_256_KEY_BASE64);
+  const raw = Buffer.from(b64, "base64");
   if (raw.length !== 32) {
-    throw new Error("AES_256_KEY_BASE64 must decode to 32 bytes");
+    throw new Error(
+      `AES_256_KEY_BASE64 decodes to ${raw.length} bytes (need 32). Use \`openssl rand -base64 32\` — identical on main + admin API.`,
+    );
   }
   return raw;
 }

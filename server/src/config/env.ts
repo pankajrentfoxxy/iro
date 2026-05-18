@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { config } from "dotenv";
 import { z } from "zod";
+import { aes256KeyBase64Schema } from "../lib/aesKeyEnv.js";
 
 const root = resolve(process.cwd());
 const dotEnvPath = resolve(root, ".env");
@@ -31,7 +32,7 @@ const envSchema = z.object({
   JWT_REGISTER_EXPIRES_IN: z.string().default("15m"),
   REFRESH_TTL_SECONDS: z.coerce.number().default(60 * 60 * 24 * 7),
 
-  AES_256_KEY_BASE64: z.string().min(32),
+  AES_256_KEY_BASE64: aes256KeyBase64Schema,
   OTP_EXPIRY_SECONDS: z.coerce.number().default(300),
   OTP_LENGTH: z.coerce.number().min(4).max(8).default(6),
 

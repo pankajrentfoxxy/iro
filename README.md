@@ -12,6 +12,34 @@ Production-ready, modular, scalable political-civic tech stack.
 - **Auth:** JWT + OTP
 - **Security:** AES-256 encrypted phones, RBAC, audit logs
 
+## Microservices (`server` · `iro-admin-service` · `admin-web`)
+
+Folder layout: **[`MICROSERVICES.md`](./MICROSERVICES.md)**.
+
+### Run APIs + admin UI on the host (Docker = DB + Redis only)
+
+From **`iro/`**, with **`server/.env`** pointing at Compose Postgres/Redis (`localhost:5433`, `localhost:6380` — see **`server/README.md`**):
+
+1. **Stop any running Compose stack** (including API containers):
+
+   ```bash
+   npm run docker:down
+   ```
+
+2. **Start Postgres + Redis**, apply **Prisma migrations** via the migrate container, then start all Node services:
+
+   ```bash
+   npm run docker:infra
+   npm run docker:migrate
+   npm run dev:services
+   ```
+
+`npm run docker:migrate` runs `docker compose run --rm prisma-migrate` from **`server/`**, which executes **`npx prisma migrate deploy`** against the Compose database. Success ends with Prisma’s migration summary and exit code **0**.
+
+### Full stack in Docker instead
+
+From **`server/`**: `npm run docker:up` (starts **`api`** and **`admin-api`** via Compose profile **`apps`**). See **`server/README.md`**.
+
 ## Quick Start
 
 ### Prerequisites

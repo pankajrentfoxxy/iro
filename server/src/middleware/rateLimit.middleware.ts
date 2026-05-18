@@ -6,6 +6,7 @@ export const apiLimiter = rateLimit({
   max: env.NODE_ENV === "production" ? 200 : 2000,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === "OPTIONS",
 });
 
 export const authLimiter = rateLimit({
@@ -13,4 +14,5 @@ export const authLimiter = rateLimit({
   max: 30,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === "OPTIONS",
 });

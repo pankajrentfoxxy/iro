@@ -1,3 +1,19 @@
+# IRO stack (same Postgres + Redis for main API and admin API).
+# · postgres / redis — infra
+# · prisma-migrate — one-shot: npm run docker:migrate (or rely on migrate deploy in api / admin-api CMD)
+# · api — mobile/public API :4000
+# · admin-api — leadership console API :4010 (iro-admin-service)
+#
+# Run Compose from **`server/`** (`docker compose` uses this file).
+# `admin-api` image builds with context **`..`** (monorepo `iro/`) so it can COPY `server/prisma` and `iro-admin-service`.
+#
+# **`api`** and **`admin-api`** use profile **`apps`**. Default `docker compose up -d`
+# starts only **postgres** + **redis** (for `npm run dev:services` on the host).
+# Full stack in Docker: `docker compose --profile apps up --build -d`
+#
+# Typical (host Node, from **`iro/`**): `npm run docker:infra && npm run docker:migrate && npm run dev:services`
+#
+# Compose profiles: **`apps`** = main + admin API containers; **`ui`** = admin Next.js (`admin-web`); **`workers`** = worker.
 services:
   postgres:
     image: postgres:16-alpine
@@ -31,6 +47,7 @@ services:
       retries: 5
 
   api:
+    profiles: ["apps"]
     build:
       context: .
       dockerfile: Dockerfile
@@ -63,6 +80,41 @@ services:
       timeout: 5s
       retries: 6
       start_period: 40s
+
+  admin-api:
+    profiles: ["apps"]
+    build:
+      context: ..
+      dockerfile: iro-admin-service/Dockerfile
+    container_name: iro-server-admin-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4010
+      DATABASE_URL: postgresql://iro:iro@postgres:5432/iro_app?schema=public
+      REDIS_URL: redis://redis:6379
+      ADMIN_JWT_ACCESS_SECRET: change-me-admin-access-secret-min-32-chars!!
+      ADMIN_JWT_REFRESH_SECRET: change-me-admin-refresh-secret-min-32-chars!!
+      AES_256_KEY_BASE64: DKVXUM1w3tP9ZXZbSIguHcR8QzH1L4wZcVX0E1/m1gY=
+      CORS_ORIGIN: http://localhost:3001,http://127.0.0.1:3001
+    ports:
+      - "4010:4010"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:'+(process.env.PORT||'4010')+'/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
 
   # Run migrations against Compose Postgres without starting the API (handy from host).
   # Usage: docker compose run --rm prisma-migrate
@@ -102,6 +154,19 @@ services:
       JWT_REFRESH_SECRET: change-me-refresh-min-32-chars!!
       AES_256_KEY_BASE64: DKVXUM1w3tP9ZXZbSIguHcR8QzH1L4wZcVX0E1/m1gY=
       CORS_ORIGIN: "*"
+
+  admin-web:
+    profiles: [ui]
+    build:
+      context: ../admin-web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_ADMIN_API_URL: http://localhost:4010/api/admin
+    container_name: iro-admin-web
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
 
 volumes:
   iro_server_pgdata:
