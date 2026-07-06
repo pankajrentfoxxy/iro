@@ -1,4 +1,5 @@
-const base = (process.env.NEXT_PUBLIC_ADMIN_API_URL ?? "http://localhost:4010/api/admin").replace(/\/$/, "");
+// const base = (process.env.NEXT_PUBLIC_ADMIN_API_URL ?? "http://localhost:4010/api/admin").replace(/\/$/, "");
+const base = "http://admin-api.iroorg.tech/api/admin";
 
 export type ApiEnvelope<T> = { success: true; data: T } | { success: false; error: { message: string } };
 
