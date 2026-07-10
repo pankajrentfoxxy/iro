@@ -310,16 +310,18 @@ model HomepageStatsOverride {
 model Registration {
   id         String   @id @default(uuid())
   memberId   String   @unique // e.g. IRO-2026-A1B2C3
-  fullName   String?
+  firstName  String?
+  lastName   String?
+  fullName   String?  // legacy — derived from first + last for older exports
   mobile     String   @unique
-  email      String?
+  email      String?  // legacy
   age        Int?
-  gender     String?
-  occupation String?
-  address    String?
-  state      String?
-  district   String?
-  pincode    String?
+  gender     String?  // legacy
+  occupation String?  // legacy
+  address    String?  // legacy
+  state      String?  // legacy
+  district   String?  // legacy
+  pincode    String?  // legacy
   reason     String? // "Why do you want to join?"
   createdAt  DateTime @default(now())
 

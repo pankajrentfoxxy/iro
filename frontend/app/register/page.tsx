@@ -7,29 +7,26 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { CheckCircle2, Loader2, ArrowRight, BadgeCheck } from 'lucide-react';
-import { INDIA_STATES, GENDER_OPTIONS } from '@/lib/indiaStates';
 
 const registrationSchema = z.object({
-  fullName: z.string().trim().max(120).optional().or(z.literal('')),
+  firstName: z.string().trim().max(80).optional().or(z.literal('')),
+  lastName: z.string().trim().max(80).optional().or(z.literal('')),
   mobile: z
     .string()
     .trim()
     .regex(/^[6-9]\d{9}$/, 'Mobile number must be exactly 10 digits'),
-  email: z.string().trim().email('Enter a valid email address').optional().or(z.literal('')),
   age: z.string().optional().or(z.literal('')),
-  gender: z.string().optional(),
-  occupation: z.string().trim().max(120).optional().or(z.literal('')),
-  address: z.string().trim().max(500).optional().or(z.literal('')),
-  state: z.string().optional().or(z.literal('')),
-  district: z.string().trim().max(80).optional().or(z.literal('')),
-  pincode: z.string().trim().max(10).optional().or(z.literal('')),
-  reason: z.string().trim().max(1000).optional(),
+  reason: z.string().trim().max(1000).optional().or(z.literal('')),
 });
 
 type RegistrationForm = z.infer<typeof registrationSchema>;
 
 const inputClass = 'iro-input';
 const labelClass = 'iro-label';
+
+function displayName(data: { firstName?: string; lastName?: string }) {
+  return [data.firstName, data.lastName].filter(Boolean).join(' ').trim();
+}
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -48,7 +45,6 @@ export default function RegisterPage() {
     formState: { errors },
   } = useForm<RegistrationForm>({
     resolver: zodResolver(registrationSchema),
-    defaultValues: { gender: '', state: '' },
   });
 
   const onSubmit = async (data: RegistrationForm) => {
@@ -61,9 +57,13 @@ export default function RegisterPage() {
         body: JSON.stringify(data),
       });
       const body = await res.json().catch(() => ({}));
+      const name =
+        body.fullName ||
+        displayName({ firstName: body.firstName, lastName: body.lastName }) ||
+        displayName(data);
       if (res.status === 409 && body.memberId) {
         setMemberId(body.memberId);
-        setMemberName(data.fullName || '');
+        setMemberName(name);
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
@@ -82,7 +82,7 @@ export default function RegisterPage() {
         throw new Error(msg);
       }
       setMemberId(body.memberId);
-      setMemberName(body.fullName || data.fullName);
+      setMemberName(name);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setServerError(err instanceof Error ? err.message : 'Something went wrong, please try again.');
@@ -96,7 +96,6 @@ export default function RegisterPage() {
       <div className="max-w-2xl mx-auto">
         <AnimatePresence mode="wait">
           {memberId ? (
-            /* ── Success state ── */
             <motion.div
               key="success"
               initial={{ opacity: 0, scale: 0.92 }}
@@ -152,7 +151,6 @@ export default function RegisterPage() {
               </motion.div>
             </motion.div>
           ) : (
-            /* ── Form state ── */
             <motion.div
               key="form"
               initial={{ opacity: 0, y: 16 }}
@@ -174,18 +172,33 @@ export default function RegisterPage() {
                 noValidate
                 className="rounded-3xl bg-white/85 dark:bg-muted backdrop-blur-xl border border-white/60 dark:border-border shadow-glass p-6 md:p-10 space-y-5"
               >
-                <div>
-                  <label htmlFor="fullName" className={labelClass}>
-                    Full Name
-                  </label>
-                  <input
-                    id="fullName"
-                    type="text"
-                    placeholder="e.g. Rahul Sharma"
-                    className={inputClass}
-                    {...register('fullName')}
-                  />
-                  <FieldError message={errors.fullName?.message} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="firstName" className={labelClass}>
+                      First Name
+                    </label>
+                    <input
+                      id="firstName"
+                      type="text"
+                      placeholder="e.g. Rahul"
+                      className={inputClass}
+                      {...register('firstName')}
+                    />
+                    <FieldError message={errors.firstName?.message} />
+                  </div>
+                  <div>
+                    <label htmlFor="lastName" className={labelClass}>
+                      Last Name
+                    </label>
+                    <input
+                      id="lastName"
+                      type="text"
+                      placeholder="e.g. Sharma"
+                      className={inputClass}
+                      {...register('lastName')}
+                    />
+                    <FieldError message={errors.lastName?.message} />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -205,22 +218,6 @@ export default function RegisterPage() {
                     <FieldError message={errors.mobile?.message} />
                   </div>
                   <div>
-                    <label htmlFor="email" className={labelClass}>
-                      Email Address
-                    </label>
-                    <input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      className={inputClass}
-                      {...register('email')}
-                    />
-                    <FieldError message={errors.email?.message} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
                     <label htmlFor="age" className={labelClass}>
                       Age
                     </label>
@@ -233,92 +230,6 @@ export default function RegisterPage() {
                       {...register('age')}
                     />
                     <FieldError message={errors.age?.message} />
-                  </div>
-                  <div>
-                    <label htmlFor="gender" className={labelClass}>
-                      Gender
-                    </label>
-                    <select id="gender" className={inputClass} {...register('gender')}>
-                      <option value="">Select gender</option>
-                      {GENDER_OPTIONS.map((g) => (
-                        <option key={g} value={g}>
-                          {g}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="occupation" className={labelClass}>
-                    Occupation
-                  </label>
-                  <input
-                    id="occupation"
-                    type="text"
-                    placeholder="e.g. Student, Farmer, Teacher, Business"
-                    className={inputClass}
-                    {...register('occupation')}
-                  />
-                  <FieldError message={errors.occupation?.message} />
-                </div>
-
-                <div>
-                  <label htmlFor="address" className={labelClass}>
-                    Address
-                  </label>
-                  <textarea
-                    id="address"
-                    rows={2}
-                    placeholder="House / street / village / town"
-                    className={`${inputClass} resize-none`}
-                    {...register('address')}
-                  />
-                  <FieldError message={errors.address?.message} />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                  <div>
-                    <label htmlFor="state" className={labelClass}>
-                      State
-                    </label>
-                    <select id="state" className={inputClass} {...register('state')}>
-                      <option value="">Select state</option>
-                      {INDIA_STATES.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                    <FieldError message={errors.state?.message} />
-                  </div>
-                  <div>
-                    <label htmlFor="district" className={labelClass}>
-                      District
-                    </label>
-                    <input
-                      id="district"
-                      type="text"
-                      placeholder="Your district"
-                      className={inputClass}
-                      {...register('district')}
-                    />
-                    <FieldError message={errors.district?.message} />
-                  </div>
-                  <div>
-                    <label htmlFor="pincode" className={labelClass}>
-                      Pincode
-                    </label>
-                    <input
-                      id="pincode"
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={6}
-                      placeholder="6-digit pincode"
-                      className={inputClass}
-                      {...register('pincode')}
-                    />
-                    <FieldError message={errors.pincode?.message} />
                   </div>
                 </div>
 

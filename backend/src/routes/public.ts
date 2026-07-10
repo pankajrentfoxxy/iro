@@ -11,16 +11,10 @@ const router = Router();
 // ============ JOIN THE MOVEMENT — PUBLIC REGISTRATION ============
 
 const registrationSchema = z.object({
-  fullName: z.string().trim().max(120).optional().or(z.literal('')),
+  firstName: z.string().trim().max(80).optional().or(z.literal('')),
+  lastName: z.string().trim().max(80).optional().or(z.literal('')),
   mobile: z.string().trim().regex(/^[6-9]\d{9}$/, 'Mobile number must be exactly 10 digits'),
-  email: z.string().trim().email('Invalid email').max(160).optional().or(z.literal('')),
   age: z.union([z.string(), z.number()]).optional().or(z.literal('')),
-  gender: z.enum(['Male', 'Female', 'Other', 'Prefer not to say']).optional().or(z.literal('')),
-  occupation: z.string().trim().max(120).optional().or(z.literal('')),
-  address: z.string().trim().max(500).optional().or(z.literal('')),
-  state: z.string().trim().max(80).optional().or(z.literal('')),
-  district: z.string().trim().max(80).optional().or(z.literal('')),
-  pincode: z.string().trim().max(10).optional().or(z.literal('')),
   reason: z.string().trim().max(1000).optional().or(z.literal('')),
 });
 
@@ -46,6 +40,13 @@ function generateMemberId(): string {
   return `IRO-${new Date().getFullYear()}-${suffix}`;
 }
 
+function displayName(firstName?: string | null, lastName?: string | null, fullName?: string | null): string | null {
+  const first = firstName?.trim();
+  const last = lastName?.trim();
+  const combined = [first, last].filter(Boolean).join(' ').trim();
+  return combined || fullName?.trim() || null;
+}
+
 router.post('/registrations', async (req: Request, res: Response) => {
   try {
     const result = registrationSchema.safeParse(req.body);
@@ -67,23 +68,20 @@ router.post('/registrations', async (req: Request, res: Response) => {
         const registration = await prisma.registration.create({
           data: {
             memberId: generateMemberId(),
-            fullName: optionalText(data.fullName),
+            firstName: optionalText(data.firstName),
+            lastName: optionalText(data.lastName),
+            fullName: displayName(optionalText(data.firstName), optionalText(data.lastName), null),
             mobile: data.mobile,
-            email: optionalText(data.email),
             age: parseOptionalAge(data.age),
-            gender: optionalText(data.gender),
-            occupation: optionalText(data.occupation),
-            address: optionalText(data.address),
-            state: optionalText(data.state) ?? '',
-            district: optionalText(data.district) ?? '',
-            pincode: optionalText(data.pincode),
             reason: optionalText(data.reason),
           },
         });
         return res.status(201).json({
           success: true,
           memberId: registration.memberId,
-          fullName: registration.fullName,
+          firstName: registration.firstName,
+          lastName: registration.lastName,
+          fullName: displayName(registration.firstName, registration.lastName, registration.fullName),
         });
       } catch (err: unknown) {
         const code = (err as { code?: string }).code;

@@ -154,18 +154,17 @@ router.delete('/media/:id', async (req: AuthRequest, res: Response) => {
 // ============ REGISTRATIONS (Join the Movement) ============
 
 function buildRegistrationWhere(query: Record<string, unknown>) {
-  const { search, state, district, occupation, dateFrom, dateTo } = query as Record<string, string | undefined>;
+  const { search, dateFrom, dateTo } = query as Record<string, string | undefined>;
   const where: Record<string, unknown> = {};
   if (search) {
     where.OR = [
+      { firstName: { contains: search, mode: 'insensitive' } },
+      { lastName: { contains: search, mode: 'insensitive' } },
       { fullName: { contains: search, mode: 'insensitive' } },
       { mobile: { contains: search } },
       { memberId: { contains: search, mode: 'insensitive' } },
     ];
   }
-  if (state) where.state = state;
-  if (district) where.district = { equals: district, mode: 'insensitive' };
-  if (occupation) where.occupation = { contains: occupation, mode: 'insensitive' };
   if (dateFrom || dateTo) {
     const createdAt: Record<string, Date> = {};
     if (dateFrom) createdAt.gte = new Date(dateFrom);
@@ -185,7 +184,7 @@ router.get('/registrations', async (req: AuthRequest, res: Response) => {
   const limit = Math.min(100, Math.max(1, parseInt(String(req.query.limit ?? '20'), 10) || 20));
   const where = buildRegistrationWhere(req.query);
 
-  const [total, items, states] = await Promise.all([
+  const [total, items] = await Promise.all([
     prisma.registration.count({ where }),
     prisma.registration.findMany({
       where,
@@ -193,7 +192,6 @@ router.get('/registrations', async (req: AuthRequest, res: Response) => {
       skip: (page - 1) * limit,
       take: limit,
     }),
-    prisma.registration.groupBy({ by: ['state'], _count: { id: true } }),
   ]);
 
   res.json({
@@ -201,7 +199,6 @@ router.get('/registrations', async (req: AuthRequest, res: Response) => {
     page,
     limit,
     totalPages: Math.ceil(total / limit),
-    states: states.map((s) => s.state).sort(),
     registrations: items.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() })),
   });
 });
@@ -219,11 +216,15 @@ router.get('/registrations/export', async (req: AuthRequest, res: Response) => {
     const s = v == null ? '' : String(v);
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
-  const header = 'Member ID,Full Name,Mobile,Email,Age,Gender,Occupation,Address,State,District,Pincode,Reason,Registered At';
+  const header = 'Member ID,First Name,Last Name,Mobile,Age,Reason,Registered At';
   const rows = items.map((r) =>
     [
-      r.memberId, r.fullName, r.mobile, r.email, r.age, r.gender, r.occupation,
-      r.address, r.state, r.district, r.pincode, r.reason,
+      r.memberId,
+      r.firstName ?? (r.fullName?.split(' ')[0] ?? ''),
+      r.lastName ?? (r.fullName?.split(' ').slice(1).join(' ') ?? ''),
+      r.mobile,
+      r.age,
+      r.reason,
       r.createdAt.toISOString().slice(0, 19).replace('T', ' '),
     ].map(esc).join(','),
   );

@@ -3,21 +3,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Download, X, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
-import { INDIA_STATES } from '@/lib/indiaStates';
 
 interface Registration {
   id: string;
   memberId: string;
+  firstName: string | null;
+  lastName: string | null;
   fullName: string | null;
   mobile: string;
-  email: string | null;
   age: number | null;
-  gender: string | null;
-  occupation: string | null;
-  address: string | null;
-  state: string | null;
-  district: string | null;
-  pincode: string | null;
   reason: string | null;
   createdAt: string;
 }
@@ -26,15 +20,11 @@ interface ListResponse {
   total: number;
   page: number;
   totalPages: number;
-  states: string[];
   registrations: Registration[];
 }
 
 const emptyFilters = {
   search: '',
-  state: '',
-  district: '',
-  occupation: '',
   dateFrom: '',
   dateTo: '',
 };
@@ -45,6 +35,11 @@ function buildQuery(filters: typeof emptyFilters, page: number) {
   params.set('page', String(page));
   params.set('limit', '20');
   return params.toString();
+}
+
+function formatName(r: Registration) {
+  const combined = [r.firstName, r.lastName].filter(Boolean).join(' ').trim();
+  return combined || r.fullName || '—';
 }
 
 export default function RegistrationsAdminPage() {
@@ -133,10 +128,9 @@ export default function RegistrationsAdminPage() {
         </button>
       </div>
 
-      {/* Filters */}
       <div className="bg-white rounded-xl border border-border p-4 mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-          <div className="relative xl:col-span-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="relative lg:col-span-2">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/80" />
             <input
               type="text"
@@ -147,34 +141,6 @@ export default function RegistrationsAdminPage() {
               className={`${inputClass} w-full pl-9`}
             />
           </div>
-          <select
-            value={filters.state}
-            onChange={(e) => setFilters({ ...filters, state: e.target.value })}
-            className={inputClass}
-          >
-            <option value="">All States</option>
-            {(data?.states?.length ? data.states : [...INDIA_STATES]).map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="District"
-            value={filters.district}
-            onChange={(e) => setFilters({ ...filters, district: e.target.value })}
-            onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-            className={inputClass}
-          />
-          <input
-            type="text"
-            placeholder="Occupation"
-            value={filters.occupation}
-            onChange={(e) => setFilters({ ...filters, occupation: e.target.value })}
-            onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-            className={inputClass}
-          />
           <div className="flex gap-2 items-center">
             <input
               type="date"
@@ -209,7 +175,6 @@ export default function RegistrationsAdminPage() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-xl border border-border overflow-hidden">
         {loading ? (
           <div className="p-12 text-center text-muted-foreground/80 animate-pulse">Loading registrations...</div>
@@ -223,11 +188,10 @@ export default function RegistrationsAdminPage() {
               <thead>
                 <tr className="bg-muted text-left text-muted-foreground text-xs uppercase tracking-wider">
                   <th className="px-4 py-3 font-medium">Member ID</th>
-                  <th className="px-4 py-3 font-medium">Name</th>
+                  <th className="px-4 py-3 font-medium">First Name</th>
+                  <th className="px-4 py-3 font-medium">Last Name</th>
                   <th className="px-4 py-3 font-medium">Mobile</th>
-                  <th className="px-4 py-3 font-medium">State</th>
-                  <th className="px-4 py-3 font-medium">District</th>
-                  <th className="px-4 py-3 font-medium">Occupation</th>
+                  <th className="px-4 py-3 font-medium">Age</th>
                   <th className="px-4 py-3 font-medium">Registered</th>
                   <th className="px-4 py-3 font-medium"></th>
                 </tr>
@@ -236,11 +200,12 @@ export default function RegistrationsAdminPage() {
                 {data.registrations.map((r) => (
                   <tr key={r.id} className="border-t border-border hover:bg-muted/60">
                     <td className="px-4 py-3 font-mono text-xs text-primary">{r.memberId}</td>
-                    <td className="px-4 py-3 font-medium text-primary">{r.fullName || '—'}</td>
+                    <td className="px-4 py-3 font-medium text-primary">{r.firstName || r.fullName?.split(' ')[0] || '—'}</td>
+                    <td className="px-4 py-3 font-medium text-primary">
+                      {r.lastName || r.fullName?.split(' ').slice(1).join(' ') || '—'}
+                    </td>
                     <td className="px-4 py-3 text-muted-foreground">{r.mobile}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{r.state}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{r.district}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{r.occupation}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{r.age ?? '—'}</td>
                     <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                       {new Date(r.createdAt).toLocaleDateString('en-IN', {
                         day: 'numeric',
@@ -264,7 +229,6 @@ export default function RegistrationsAdminPage() {
           </div>
         )}
 
-        {/* Pagination */}
         {data && data.totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-border">
             <p className="text-xs text-muted-foreground">
@@ -292,7 +256,6 @@ export default function RegistrationsAdminPage() {
         )}
       </div>
 
-      {/* Detail modal */}
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -311,7 +274,7 @@ export default function RegistrationsAdminPage() {
             >
               <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-white rounded-t-2xl">
                 <div>
-                  <h2 className="font-display font-bold text-primary text-lg">{selected.fullName || '—'}</h2>
+                  <h2 className="font-display font-bold text-primary text-lg">{formatName(selected)}</h2>
                   <p className="font-mono text-xs text-secondary">{selected.memberId}</p>
                 </div>
                 <button
@@ -324,14 +287,10 @@ export default function RegistrationsAdminPage() {
               </div>
               <div className="px-6 py-5 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
                 {[
+                  ['First Name', selected.firstName || selected.fullName?.split(' ')[0] || '—'],
+                  ['Last Name', selected.lastName || selected.fullName?.split(' ').slice(1).join(' ') || '—'],
                   ['Mobile', selected.mobile],
-                  ['Email', selected.email || '—'],
                   ['Age', selected.age != null ? String(selected.age) : '—'],
-                  ['Gender', selected.gender || '—'],
-                  ['Occupation', selected.occupation || '—'],
-                  ['Pincode', selected.pincode || '—'],
-                  ['State', selected.state || '—'],
-                  ['District', selected.district || '—'],
                 ].map(([label, value]) => (
                   <div key={label}>
                     <p className="text-xs text-muted-foreground/80 uppercase tracking-wide mb-0.5">{label}</p>
@@ -339,17 +298,11 @@ export default function RegistrationsAdminPage() {
                   </div>
                 ))}
                 <div className="col-span-2">
-                  <p className="text-xs text-muted-foreground/80 uppercase tracking-wide mb-0.5">Address</p>
-                  <p className="text-primary">{selected.address || '—'}</p>
+                  <p className="text-xs text-muted-foreground/80 uppercase tracking-wide mb-0.5">
+                    Why do they want to join?
+                  </p>
+                  <p className="text-primary">{selected.reason || '—'}</p>
                 </div>
-                {selected.reason && (
-                  <div className="col-span-2">
-                    <p className="text-xs text-muted-foreground/80 uppercase tracking-wide mb-0.5">
-                      Why do they want to join?
-                    </p>
-                    <p className="text-primary">{selected.reason}</p>
-                  </div>
-                )}
                 <div className="col-span-2">
                   <p className="text-xs text-muted-foreground/80 uppercase tracking-wide mb-0.5">Registered At</p>
                   <p className="text-primary">
