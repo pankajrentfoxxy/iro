@@ -12,6 +12,7 @@ interface Registration {
   fullName: string | null;
   mobile: string;
   age: number | null;
+  address: string | null;
   reason: string | null;
   createdAt: string;
 }
@@ -297,6 +298,10 @@ export default function RegistrationsAdminPage() {
                     <p className="text-primary font-medium">{value}</p>
                   </div>
                 ))}
+                <div className="col-span-2">
+                  <p className="text-xs text-muted-foreground/80 uppercase tracking-wide mb-0.5">Address</p>
+                  <p className="text-primary">{selected.address || '—'}</p>
+                </div>
                 <div className="col-span-2">
                   <p className="text-xs text-muted-foreground/80 uppercase tracking-wide mb-0.5">
                     Why do they want to join?

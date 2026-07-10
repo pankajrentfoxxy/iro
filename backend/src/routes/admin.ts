@@ -216,7 +216,7 @@ router.get('/registrations/export', async (req: AuthRequest, res: Response) => {
     const s = v == null ? '' : String(v);
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
-  const header = 'Member ID,First Name,Last Name,Mobile,Age,Reason,Registered At';
+  const header = 'Member ID,First Name,Last Name,Mobile,Age,Address,Reason,Registered At';
   const rows = items.map((r) =>
     [
       r.memberId,
@@ -224,6 +224,7 @@ router.get('/registrations/export', async (req: AuthRequest, res: Response) => {
       r.lastName ?? (r.fullName?.split(' ').slice(1).join(' ') ?? ''),
       r.mobile,
       r.age,
+      r.address,
       r.reason,
       r.createdAt.toISOString().slice(0, 19).replace('T', ' '),
     ].map(esc).join(','),

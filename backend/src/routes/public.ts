@@ -15,6 +15,7 @@ const registrationSchema = z.object({
   lastName: z.string().trim().max(80).optional().or(z.literal('')),
   mobile: z.string().trim().regex(/^[6-9]\d{9}$/, 'Mobile number must be exactly 10 digits'),
   age: z.union([z.string(), z.number()]).optional().or(z.literal('')),
+  address: z.string().trim().max(500).optional().or(z.literal('')),
   reason: z.string().trim().max(1000).optional().or(z.literal('')),
 });
 
@@ -73,6 +74,7 @@ router.post('/registrations', async (req: Request, res: Response) => {
             fullName: displayName(optionalText(data.firstName), optionalText(data.lastName), null),
             mobile: data.mobile,
             age: parseOptionalAge(data.age),
+            address: optionalText(data.address),
             reason: optionalText(data.reason),
           },
         });

@@ -16,6 +16,7 @@ const registrationSchema = z.object({
     .trim()
     .regex(/^[6-9]\d{9}$/, 'Mobile number must be exactly 10 digits'),
   age: z.string().optional().or(z.literal('')),
+  address: z.string().trim().max(500).optional().or(z.literal('')),
   reason: z.string().trim().max(1000).optional().or(z.literal('')),
 });
 
@@ -231,6 +232,20 @@ export default function RegisterPage() {
                     />
                     <FieldError message={errors.age?.message} />
                   </div>
+                </div>
+
+                <div>
+                  <label htmlFor="address" className={labelClass}>
+                    Address
+                  </label>
+                  <textarea
+                    id="address"
+                    rows={3}
+                    placeholder="House / street / village / town"
+                    className={`${inputClass} resize-none`}
+                    {...register('address')}
+                  />
+                  <FieldError message={errors.address?.message} />
                 </div>
 
                 <div>

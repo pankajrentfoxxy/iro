@@ -13,7 +13,6 @@ const NAV_LINKS = [
   { label: 'Campaigns', href: '/campaigns' },
   { label: 'Media', href: '/media' },
   { label: 'Reformer Map', href: '/reformer-map' },
-  { label: 'Donate', href: '/donate' },
 ];
 
 interface UserMe {
