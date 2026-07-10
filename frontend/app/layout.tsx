@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Playfair_Display } from 'next/font/google';
 import './globals.css';
 import ConditionalLayout from '@/components/ConditionalLayout';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,13 +26,11 @@ export const metadata: Metadata = {
     'A citizen-led movement for transparent governance and reform across India. Join thousands of reformers working towards a better nation.',
   keywords: ['Indian Reformer Organisation', 'IRO', 'India reform', 'transparent governance'],
   metadataBase: new URL('https://iro.in'),
-
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
-
   openGraph: {
     siteName: 'Indian Reformer Organisation',
     title: 'Indian Reformer Organisation | Reforming India, Together',
@@ -47,9 +46,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="bg-[#F7F4EF] text-[#2C3E50] antialiased">
-        <ConditionalLayout>{children}</ConditionalLayout>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('iro-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body>
+        <ThemeProvider>
+          <ConditionalLayout>{children}</ConditionalLayout>
+        </ThemeProvider>
       </body>
     </html>
   );

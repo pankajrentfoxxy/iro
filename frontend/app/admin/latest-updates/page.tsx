@@ -94,7 +94,7 @@ export default function AdminLatestUpdatesPage() {
 
   return (
     <div className="min-h-screen bg-neutral">
-      <nav className="bg-primary text-white">
+      <nav className="bg-card border-b border-border text-foreground shadow-card">
         <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/admin" className="text-lg font-bold">
             ← IRO Admin
@@ -105,7 +105,7 @@ export default function AdminLatestUpdatesPage() {
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-primary mb-6">Latest Updates (Home Hero)</h1>
-        <p className="text-slate-600 mb-6">
+        <p className="text-muted-foreground mb-6">
           The most recent update appears in the full-page hero on the home page.
         </p>
 
@@ -113,39 +113,39 @@ export default function AdminLatestUpdatesPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleCreate}
-          className="bg-white rounded-xl p-6 shadow border border-slate-200 mb-8"
+          className="bg-white rounded-xl p-6 shadow border border-border mb-8"
         >
           <h2 className="font-semibold text-primary mb-4">Add New Update</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Title</label>
+              <label className="block text-sm font-medium text-foreground mb-1">Title</label>
               <input
                 type="text"
                 value={form.title}
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200"
+                className="w-full px-4 py-2 rounded-lg border border-border"
                 placeholder="e.g. Welcome to IRO"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Excerpt (hero text)</label>
+              <label className="block text-sm font-medium text-foreground mb-1">Excerpt (hero text)</label>
               <textarea
                 value={form.excerpt}
                 onChange={(e) => setForm((f) => ({ ...f, excerpt: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200"
+                className="w-full px-4 py-2 rounded-lg border border-border"
                 rows={2}
                 placeholder="Short summary for the hero section"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Image URL (optional)</label>
+              <label className="block text-sm font-medium text-foreground mb-1">Image URL (optional)</label>
               <input
                 type="url"
                 value={form.imageUrl}
                 onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200"
+                className="w-full px-4 py-2 rounded-lg border border-border"
                 placeholder="https://..."
               />
             </div>
@@ -166,10 +166,10 @@ export default function AdminLatestUpdatesPage() {
               key={u.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl p-6 shadow border border-slate-200"
+              className="bg-white rounded-xl p-6 shadow border border-border"
             >
               <h3 className="font-semibold text-primary">{u.title}</h3>
-              <p className="text-slate-600 text-sm mt-1">{u.excerpt}</p>
+              <p className="text-muted-foreground text-sm mt-1">{u.excerpt}</p>
               <p className="text-slate-400 text-xs mt-2">
                 {new Date(u.publishedAt).toLocaleDateString()}
               </p>

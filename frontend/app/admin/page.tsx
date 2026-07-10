@@ -51,7 +51,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-neutral">
-      <nav className="bg-primary text-white">
+      <nav className="bg-card border-b border-border text-foreground shadow-card">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/" className="text-xl font-bold">
             IRO Admin

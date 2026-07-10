@@ -46,7 +46,11 @@ export default function HomePage() {
   useEffect(() => {
     fetch('/api/public/latest-updates')
       .then((r) => r.json())
-      .then((d) => setLatestUpdates(d.updates?.length ? d.updates : LATEST_UPDATES_FALLBACK))
+      .then((d) => {
+        const apiUpdates = d.updates ?? [];
+        const hasImages = apiUpdates.some((u: LatestUpdate) => u.imageUrl);
+        setLatestUpdates(hasImages && apiUpdates.length > 0 ? apiUpdates : LATEST_UPDATES_FALLBACK);
+      })
       .catch(() => setLatestUpdates(LATEST_UPDATES_FALLBACK));
   }, []);
 
@@ -63,8 +67,8 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center bg-[#F7F4EF]">
-        <div className="animate-pulse text-[#2C3E50] font-medium">Loading...</div>
+      <div className="min-h-[60vh] flex items-center justify-center bg-background">
+        <div className="animate-pulse text-muted-foreground font-medium">Loading...</div>
       </div>
     );
   }
@@ -72,17 +76,19 @@ export default function HomePage() {
   const displayUpdates = latestUpdates.length > 0 ? latestUpdates : LATEST_UPDATES_FALLBACK;
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-background">
       {/* ── 1. Hero ───────────────────────────────────────────── */}
-      <section className="relative py-20 md:py-28 flex items-center justify-center overflow-hidden bg-[#0D1B2A]">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0D1B2A] via-[#0D1B2A]/95 to-[#0D1B2A]" />
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, #E8892C 0%, transparent 50%)' }} />
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-white">
+      <section className="relative py-20 md:py-28 flex items-center justify-center overflow-hidden bg-card border-b border-border">
+        <div
+          className="absolute inset-0 opacity-100 pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, rgba(255,153,51,0.12) 0%, transparent 55%)' }}
+        />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight"
+            className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight text-primary"
           >
             Indian Reformer Organisation
           </motion.h1>
@@ -90,7 +96,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className="text-[#E8892C] text-lg md:text-xl font-semibold tracking-[0.2em] uppercase mb-8"
+            className="text-secondary text-lg md:text-xl font-semibold tracking-[0.2em] uppercase mb-8"
           >
             Reforming India, Together
           </motion.p>
@@ -98,7 +104,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-white/80 text-base md:text-lg max-w-2xl mx-auto mb-10"
+            className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto mb-10"
           >
             A citizen-led movement for transparent governance and reform across every state of India.
           </motion.p>
@@ -107,10 +113,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
           >
-            <Link
-              href="/join-the-movement"
-              className="inline-block px-8 py-4 bg-[#E8892C] text-white font-semibold rounded-lg hover:bg-[#B8692A] transition-colors shadow-lg"
-            >
+            <Link href="/join-the-movement" className="iro-btn-primary px-8 py-4 text-base">
               Join the Movement
             </Link>
           </motion.div>
@@ -134,10 +137,10 @@ export default function HomePage() {
             ].map((item) => (
               <div
                 key={item.label}
-                className="bg-white rounded-xl p-5 shadow-lg border border-[#E8892C]/10"
+                className="bg-card rounded-card-lg p-5 shadow-card-md border border-border"
               >
-                <p className="text-[#2C3E50]/60 text-sm font-medium">{item.label}</p>
-                <p className="text-2xl md:text-3xl font-bold text-[#0D1B2A] mt-1">{item.value}</p>
+                <p className="text-muted-foreground/60 text-sm font-medium">{item.label}</p>
+                <p className="text-2xl md:text-3xl font-bold text-primary mt-1">{item.value}</p>
               </div>
             ))}
           </motion.div>
@@ -152,36 +155,36 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-[#0D1B2A] mb-2">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-primary mb-2">
               Latest Updates
             </h2>
-            <div className="h-1 w-20 bg-[#E8892C] rounded-full mb-6" />
+            <div className="h-1 w-20 bg-secondary rounded-full mb-6" />
             <NewsCarousel items={displayUpdates} />
           </motion.div>
         </div>
       </section>
 
       {/* ── 4. India Map Preview ──────────────────────────────── */}
-      <section className="py-12 md:py-16 px-4 bg-white/50">
+      <section className="py-12 md:py-16 px-4 bg-muted/50">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-[#E8892C]/10"
+            className="bg-card rounded-card-lg p-6 md:p-8 shadow-card-md border border-border"
           >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
               <div>
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-[#0D1B2A] mb-2">
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-primary mb-2">
                   Reformer Distribution
                 </h2>
-                <p className="text-[#2C3E50]/70 text-sm">
+                <p className="text-muted-foreground/70 text-sm">
                   Hover on a state to see Reformer count. Click to explore district-wise breakdown.
                 </p>
               </div>
               <Link
                 href="/reformer-map"
-                className="inline-flex items-center gap-2 text-[#E8892C] font-semibold hover:text-[#B8692A] transition-colors text-sm"
+                className="inline-flex items-center gap-2 text-secondary font-semibold hover:text-secondary-dark transition-colors text-sm"
               >
                 Explore Full Map
                 <span aria-hidden>→</span>
@@ -195,7 +198,7 @@ export default function HomePage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="bg-[#F7F4EF] rounded-xl p-6 border border-[#E8892C]/10 h-full"
+                    className="bg-background rounded-xl p-6 border border-secondary/10 h-full"
                   >
                     <StateDistrictMap
                       state={selectedState}
@@ -236,28 +239,28 @@ export default function HomePage() {
             className="grid md:grid-cols-2 gap-8 items-center"
           >
             <div>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-[#0D1B2A] mb-4">
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-primary mb-4">
                 {WELCOME_MESSAGE.title}
               </h2>
-              <p className="text-[#2C3E50] leading-relaxed mb-4">
+              <p className="text-muted-foreground leading-relaxed mb-4">
                 {WELCOME_MESSAGE.excerpt}
               </p>
               <Link
                 href="/about"
-                className="inline-flex items-center gap-2 text-[#E8892C] font-semibold hover:text-[#B8692A] transition-colors"
+                className="inline-flex items-center gap-2 text-secondary font-semibold hover:text-secondary-dark transition-colors"
               >
                 Know Us
                 <span aria-hidden>→</span>
               </Link>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white rounded-xl p-6 border border-[#E8892C]/10 shadow">
-                <p className="text-[#2C3E50]/70 text-sm font-medium">Total Campaigns</p>
-                <p className="text-3xl font-bold text-[#E8892C] mt-1">{stats?.totalCampaigns ?? 0}</p>
+              <div className="bg-card rounded-card p-6 border border-border shadow-card">
+                <p className="text-muted-foreground text-sm font-medium">Total Campaigns</p>
+                <p className="text-3xl font-bold text-secondary mt-1">{stats?.totalCampaigns ?? 0}</p>
               </div>
-              <div className="bg-white rounded-xl p-6 border border-[#E8892C]/10 shadow">
-                <p className="text-[#2C3E50]/70 text-sm font-medium">Volunteers</p>
-                <p className="text-3xl font-bold text-[#E8892C] mt-1">{stats?.totalVolunteers ?? 0}</p>
+              <div className="bg-card rounded-card p-6 border border-border shadow-card">
+                <p className="text-muted-foreground/70 text-sm font-medium">Volunteers</p>
+                <p className="text-3xl font-bold text-secondary mt-1">{stats?.totalVolunteers ?? 0}</p>
               </div>
             </div>
           </motion.div>
@@ -271,27 +274,24 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="relative overflow-hidden rounded-2xl bg-[#0D1B2A] px-8 py-12 md:px-16 md:py-16 text-center"
+            className="relative overflow-hidden rounded-card-lg bg-card border border-border shadow-card-lg px-8 py-12 md:px-16 md:py-16 text-center"
           >
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 70% 50%, #E8892C 0%, transparent 50%)' }} />
+            <div
+              className="absolute inset-0 opacity-100 pointer-events-none"
+              style={{ backgroundImage: 'radial-gradient(circle at 70% 50%, rgba(255,153,51,0.08) 0%, transparent 50%)' }}
+            />
             <div className="relative z-10">
-              <h2 className="font-display text-2xl md:text-4xl font-bold text-white mb-3">
+              <h2 className="font-display text-2xl md:text-4xl font-bold text-primary mb-3">
                 Be Part of the Change
               </h2>
-              <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+              <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
                 Join thousands of reformers working towards transparent governance and a better India.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/join-the-movement"
-                  className="inline-block px-8 py-4 bg-[#E8892C] text-white font-semibold rounded-lg hover:bg-[#B8692A] transition-colors"
-                >
+                <Link href="/join-the-movement" className="iro-btn-primary px-8 py-4">
                   Join the Movement
                 </Link>
-                <Link
-                  href="/donate"
-                  className="inline-block px-8 py-4 border-2 border-white/40 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
-                >
+                <Link href="/donate" className="iro-btn-outline px-8 py-4">
                   Donate
                 </Link>
               </div>

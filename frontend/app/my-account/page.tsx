@@ -35,10 +35,10 @@ export default function MyAccountOverviewPage() {
       className="space-y-6"
     >
       <div>
-        <h1 className="font-display text-2xl font-bold text-[#0D1B2A] mb-1">
+        <h1 className="font-display text-2xl font-bold text-primary mb-1">
           Welcome{user?.name ? `, ${user.name}` : ''}
         </h1>
-        <p className="text-[#2C3E50]/70 text-sm">
+        <p className="text-muted-foreground/70 text-sm">
           Manage your profile and grow the movement.
         </p>
       </div>
@@ -46,37 +46,37 @@ export default function MyAccountOverviewPage() {
       <div className="grid sm:grid-cols-2 gap-4">
         <Link
           href="/my-account/profile"
-          className="block bg-white rounded-xl p-6 shadow border border-[#E8892C]/10 hover:border-[#E8892C]/30 transition"
+          className="block bg-white rounded-xl p-6 shadow border border-secondary/10 hover:border-secondary/30 transition"
         >
-          <h3 className="font-semibold text-[#0D1B2A] mb-2">Profile</h3>
-          <p className="text-[#2C3E50]/70 text-sm mb-3">
+          <h3 className="font-semibold text-primary mb-2">Profile</h3>
+          <p className="text-muted-foreground/70 text-sm mb-3">
             Update your name, location, and contact details.
           </p>
-          <span className="text-[#E8892C] font-medium text-sm">Edit profile →</span>
+          <span className="text-secondary font-medium text-sm">Edit profile →</span>
         </Link>
         <Link
           href="/my-account/refer"
-          className="block bg-white rounded-xl p-6 shadow border border-[#E8892C]/10 hover:border-[#E8892C]/30 transition"
+          className="block bg-white rounded-xl p-6 shadow border border-secondary/10 hover:border-secondary/30 transition"
         >
-          <h3 className="font-semibold text-[#0D1B2A] mb-2">Refer & Grow</h3>
-          <p className="text-[#2C3E50]/70 text-sm mb-3">
+          <h3 className="font-semibold text-primary mb-2">Refer & Grow</h3>
+          <p className="text-muted-foreground/70 text-sm mb-3">
             Share your referral code and invite others to join.
           </p>
-          <span className="text-[#E8892C] font-medium text-sm">Get link →</span>
+          <span className="text-secondary font-medium text-sm">Get link →</span>
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl p-6 shadow border border-[#E8892C]/10">
-        <h3 className="font-semibold text-[#0D1B2A] mb-4">Quick Stats</h3>
+      <div className="bg-white rounded-xl p-6 shadow border border-secondary/10">
+        <h3 className="font-semibold text-primary mb-4">Quick Stats</h3>
         <div className="flex gap-6">
           <div>
-            <p className="text-[#2C3E50]/60 text-sm">Reformers in movement</p>
-            <p className="text-2xl font-bold text-[#E8892C]">{stats?.totalMembers ?? '—'}</p>
+            <p className="text-muted-foreground/60 text-sm">Reformers in movement</p>
+            <p className="text-2xl font-bold text-secondary">{stats?.totalMembers ?? '—'}</p>
           </div>
           {user?.referralCode && (
             <div>
-              <p className="text-[#2C3E50]/60 text-sm">Your referral code</p>
-              <p className="text-lg font-mono font-semibold text-[#0D1B2A]">{user.referralCode}</p>
+              <p className="text-muted-foreground/60 text-sm">Your referral code</p>
+              <p className="text-lg font-mono font-semibold text-primary">{user.referralCode}</p>
             </div>
           )}
         </div>

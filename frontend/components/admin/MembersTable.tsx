@@ -190,19 +190,19 @@ export default function MembersTable() {
   return (
     <div className="space-y-6">
       {/* Filter bar */}
-      <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+      <div className="bg-white rounded-xl p-4 shadow-sm border border-border">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <input
             type="text"
             placeholder="Search by name or phone..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm"
+            className="px-3 py-2 border border-border rounded-lg text-sm"
           />
           <select
             value={stateFilter}
             onChange={(e) => setStateFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm"
+            className="px-3 py-2 border border-border rounded-lg text-sm"
           >
             {INDIAN_STATES.map((s) => (
               <option key={s} value={s}>
@@ -213,7 +213,7 @@ export default function MembersTable() {
           <select
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm"
+            className="px-3 py-2 border border-border rounded-lg text-sm"
           >
             <option value="All">All</option>
             <option value="missed_call">Missed Call</option>
@@ -225,21 +225,21 @@ export default function MembersTable() {
             type="date"
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm"
+            className="px-3 py-2 border border-border rounded-lg text-sm"
             placeholder="From"
           />
           <input
             type="date"
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}
-            className="px-3 py-2 border border-gray-200 rounded-lg text-sm"
+            className="px-3 py-2 border border-border rounded-lg text-sm"
             placeholder="To"
           />
         </div>
         <div className="flex gap-2 mt-4">
           <button
             onClick={() => setPage(1)}
-            className="px-4 py-2 bg-[#E8892C] text-white rounded-lg text-sm font-medium hover:bg-[#E8892C]/90"
+            className="px-4 py-2 bg-secondary text-white rounded-lg text-sm font-medium hover:bg-secondary/90"
           >
             Apply Filters
           </button>
@@ -251,7 +251,7 @@ export default function MembersTable() {
               setDateFrom('');
               setDateTo('');
             }}
-            className="px-4 py-2 text-gray-600 text-sm hover:text-gray-800"
+            className="px-4 py-2 text-muted-foreground text-sm hover:text-gray-800"
           >
             Reset
           </button>
@@ -265,13 +265,13 @@ export default function MembersTable() {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-gray-500">Loading members...</div>
+          <div className="p-12 text-center text-muted-foreground">Loading members...</div>
         ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-muted">
               <tr>
                 <th className="px-4 py-3 text-left">
                   <input
@@ -281,28 +281,28 @@ export default function MembersTable() {
                     className="rounded"
                   />
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   Name
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   Phone
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   State
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   District
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   Joined
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   Source
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   Status
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                   Actions
                 </th>
               </tr>
@@ -311,7 +311,7 @@ export default function MembersTable() {
               {paginated.map((m) => (
                 <tr
                   key={m.id}
-                  className="border-b border-gray-100 hover:bg-gray-50"
+                  className="border-b border-border hover:bg-muted"
                 >
                   <td className="px-4 py-3">
                     <input
@@ -323,16 +323,16 @@ export default function MembersTable() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#E8892C]/20 flex items-center justify-center text-[#E8892C] font-semibold text-xs">
+                      <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-semibold text-xs">
                         {getInitials(m.name)}
                       </div>
-                      <span className="font-medium text-[#0D1B2A]">{m.name}</span>
+                      <span className="font-medium text-primary">{m.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">{m.phone}</td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground">{m.phone}</td>
                   <td className="px-4 py-3 text-sm">{m.state}</td>
                   <td className="px-4 py-3 text-sm">{m.district}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
+                  <td className="px-4 py-3 text-sm text-muted-foreground">
                     {m.joinedDate}
                   </td>
                   <td className="px-4 py-3">
@@ -359,14 +359,14 @@ export default function MembersTable() {
                       <MoreVertical size={18} />
                     </button>
                     {menuOpen === m.id && (
-                      <div className="absolute right-4 top-12 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-[140px]">
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50">
+                      <div className="absolute right-4 top-12 bg-white border border-border rounded-lg shadow-lg py-1 z-10 min-w-[140px]">
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-muted">
                           View Profile
                         </button>
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-orange-600">
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-muted text-orange-600">
                           Block
                         </button>
-                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-red-600">
+                        <button className="block w-full text-left px-4 py-2 text-sm hover:bg-muted text-red-600">
                           Delete
                         </button>
                       </div>
@@ -380,8 +380,8 @@ export default function MembersTable() {
 
         )}
         {/* Pagination */}
-        <div className="px-4 py-3 bg-gray-50 flex flex-wrap justify-between items-center gap-4">
-          <span className="text-sm text-gray-500">
+        <div className="px-4 py-3 bg-muted flex flex-wrap justify-between items-center gap-4">
+          <span className="text-sm text-muted-foreground">
             Showing {total === 0 ? 0 : (page - 1) * perPage + 1}–{Math.min(page * perPage, total)} of{' '}
             {total} results
           </span>
@@ -392,7 +392,7 @@ export default function MembersTable() {
                 setPerPage(Number(e.target.value));
                 setPage(1);
               }}
-              className="px-2 py-1 border border-gray-200 rounded text-sm"
+              className="px-2 py-1 border border-border rounded text-sm"
             >
               <option value={10}>10</option>
               <option value={25}>25</option>
@@ -423,7 +423,7 @@ export default function MembersTable() {
 
       {/* Bulk actions bar */}
       {selected.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-[#E8892C] text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-4">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-secondary text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-4">
           <span className="font-medium">{selected.size} members selected</span>
           <button className="px-3 py-1 bg-white/20 rounded-lg text-sm hover:bg-white/30">
             Export Selected

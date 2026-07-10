@@ -54,7 +54,7 @@ export default function ReferPage() {
 
   return (
     <div className="min-h-screen bg-neutral">
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur border-b border-border shadow-card">
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent" />
         <div className="max-w-3xl mx-auto px-4 flex justify-between items-center h-14">
           <Logo variant="nav" href="/" />
@@ -66,21 +66,21 @@ export default function ReferPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl p-6 shadow-lg border border-slate-200"
+          className="bg-white rounded-xl p-6 shadow-lg border border-border"
         >
           <h1 className="text-xl font-bold text-primary mb-2">Refer & Grow</h1>
-          <p className="text-slate-600 text-sm mb-6">
+          <p className="text-muted-foreground text-sm mb-6">
             Share your referral code with friends. When they join IRO, you both benefit.
           </p>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Your Referral Code</label>
+              <label className="block text-sm font-medium text-foreground mb-1">Your Referral Code</label>
               <div className="flex gap-2">
                 <input
                   readOnly
                   value={user?.referralCode || '-'}
-                  className="flex-1 px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 font-mono font-semibold text-primary"
+                  className="flex-1 px-4 py-3 rounded-lg bg-muted border border-border font-mono font-semibold text-primary"
                 />
                 <button
                   type="button"
@@ -93,12 +93,12 @@ export default function ReferPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Share Link</label>
+              <label className="block text-sm font-medium text-foreground mb-1">Share Link</label>
               <div className="flex gap-2">
                 <input
                   readOnly
                   value={shareUrl}
-                  className="flex-1 px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-600 truncate"
+                  className="flex-1 px-4 py-3 rounded-lg bg-muted border border-border text-sm text-muted-foreground truncate"
                 />
                 <button
                   type="button"

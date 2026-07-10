@@ -35,23 +35,23 @@ export default function DonatePage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#F7F4EF]">
+      <div className="min-h-screen bg-background">
         <div className="max-w-xl mx-auto px-4 py-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl p-8 shadow-lg border border-[#E8892C]/10 text-center"
+            className="bg-white rounded-xl p-8 shadow-lg border border-secondary/10 text-center"
           >
-            <div className="w-16 h-16 rounded-full bg-[#E8892C]/20 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
               <span className="text-3xl">✓</span>
             </div>
-            <h2 className="font-display text-2xl font-bold text-[#0D1B2A] mb-2">Thank You!</h2>
-            <p className="text-[#2C3E50]/70 mb-6">
+            <h2 className="font-display text-2xl font-bold text-primary mb-2">Thank You!</h2>
+            <p className="text-muted-foreground/70 mb-6">
               Your donation intent has been recorded. Our team will reach out shortly to complete the payment process.
             </p>
             <Link
               href="/"
-              className="inline-block px-6 py-2.5 bg-[#E8892C] text-white font-semibold rounded-lg hover:bg-[#B8692A] transition-colors"
+              className="inline-block px-6 py-2.5 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark transition-colors"
             >
               Back to Home
             </Link>
@@ -62,22 +62,22 @@ export default function DonatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-xl mx-auto px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-[#0D1B2A] mb-2 text-center">
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-primary mb-2 text-center">
             Donate to IRO
           </h1>
-          <p className="text-[#2C3E50] text-center mb-8">
+          <p className="text-muted-foreground text-center mb-8">
             Support the Indian Reformer Organisation and help drive change across India.
           </p>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 md:p-8 shadow-lg border border-[#E8892C]/10 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 md:p-8 shadow-lg border border-secondary/10 space-y-6">
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-3">Select amount (₹)</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-3">Select amount (₹)</label>
               <div className="flex flex-wrap gap-2">
                 {AMOUNTS.map((a) => (
                   <button
@@ -89,8 +89,8 @@ export default function DonatePage() {
                     }}
                     className={`px-4 py-2.5 rounded-lg font-medium transition ${
                       amount === a
-                        ? 'bg-[#E8892C] text-white'
-                        : 'bg-[#F7F4EF] text-[#2C3E50] hover:bg-[#E8892C]/20'
+                        ? 'bg-secondary text-white'
+                        : 'bg-background text-muted-foreground hover:bg-secondary/20'
                     }`}
                   >
                     ₹{a}
@@ -98,7 +98,7 @@ export default function DonatePage() {
                 ))}
               </div>
               <div className="mt-3">
-                <label className="block text-xs text-[#2C3E50]/60 mb-1">Or enter custom amount (₹)</label>
+                <label className="block text-xs text-muted-foreground/60 mb-1">Or enter custom amount (₹)</label>
                 <input
                   type="number"
                   min={10}
@@ -108,28 +108,28 @@ export default function DonatePage() {
                     setAmount(null);
                   }}
                   placeholder="e.g. 250"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-[#0D1B2A] focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C]"
+                  className="w-full px-4 py-2.5 rounded-lg bg-background border border-border text-primary focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-2">Name</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-[#0D1B2A] focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C]"
+                className="w-full px-4 py-3 rounded-lg bg-background border border-border text-primary focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-2">Email</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-2">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-[#0D1B2A] focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C]"
+                className="w-full px-4 py-3 rounded-lg bg-background border border-border text-primary focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
                 required
               />
             </div>
@@ -138,13 +138,13 @@ export default function DonatePage() {
             <button
               type="submit"
               disabled={!isValidAmount || submitting}
-              className="w-full py-3 bg-[#E8892C] text-white font-semibold rounded-lg hover:bg-[#B8692A] disabled:opacity-50 transition"
+              className="w-full py-3 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark disabled:opacity-50 transition"
             >
               {submitting ? 'Processing...' : `Donate ₹${selectedAmount ?? 0}`}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-[#2C3E50]/60 text-sm">
+          <p className="mt-6 text-center text-muted-foreground/60 text-sm">
             Payment gateway integration coming soon. Your details will be used to complete the donation.
           </p>
         </motion.div>

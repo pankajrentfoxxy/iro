@@ -123,24 +123,24 @@ export default function StateDistrictMap({ state, districts, totalReformers, onB
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={onBack}
-          className="text-sm font-medium text-[#2C3E50] hover:text-[#E8892C] flex items-center gap-1"
+          className="text-sm font-medium text-muted-foreground hover:text-secondary flex items-center gap-1"
         >
           ← Back to India map
         </button>
-        <span className="text-lg font-bold text-[#E8892C]">{totalReformers} Reformers</span>
+        <span className="text-lg font-bold text-secondary">{totalReformers} Reformers</span>
       </div>
-      <h3 className="text-xl font-semibold text-[#0D1B2A] mb-4">{state} – District-wise</h3>
+      <h3 className="text-xl font-semibold text-primary mb-4">{state} – District-wise</h3>
 
       {/* Interactive SVG map (when available) */}
       {slug && svgLoaded ? (
         <div
           ref={containerRef}
-          className="mb-6 rounded-xl overflow-hidden border border-slate-200 bg-white relative"
+          className="mb-6 rounded-xl overflow-hidden border border-border bg-white relative"
         >
           <div ref={svgRef} className="w-full" />
           {tooltip && (
             <div
-              className="absolute pointer-events-none z-10 px-3 py-1.5 bg-white/95 backdrop-blur border border-slate-200 rounded-lg shadow-lg text-sm font-medium text-slate-800 whitespace-nowrap -translate-x-1/2 -translate-y-full"
+              className="absolute pointer-events-none z-10 px-3 py-1.5 bg-white/95 backdrop-blur border border-border rounded-lg shadow-lg text-sm font-medium text-slate-800 whitespace-nowrap -translate-x-1/2 -translate-y-full"
               style={{ left: tooltip.x, top: tooltip.y }}
             >
               {tooltip.text}
@@ -151,7 +151,7 @@ export default function StateDistrictMap({ state, districts, totalReformers, onB
           </p>
         </div>
       ) : slug ? (
-        <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
+        <div className="mb-6 rounded-xl border border-border bg-muted p-6 text-center">
           <p className="text-slate-500 text-sm mb-2">
             Add <code className="bg-slate-200 px-1 rounded">state-maps/{slug}.svg</code> for interactive map.
           </p>
@@ -159,7 +159,7 @@ export default function StateDistrictMap({ state, districts, totalReformers, onB
             href="https://commons.wikimedia.org/wiki/File:Districts_of_Uttar_Pradesh.svg"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#E8892C] hover:underline text-sm"
+            className="text-secondary hover:underline text-sm"
           >
             Download from Wikimedia Commons →
           </a>
@@ -167,7 +167,7 @@ export default function StateDistrictMap({ state, districts, totalReformers, onB
       ) : null}
 
       {/* District list – always visible, hoverable, clickable */}
-      <h4 className="text-sm font-medium text-slate-600 mb-2">
+      <h4 className="text-sm font-medium text-muted-foreground mb-2">
         Districts & Reformer count {selectedDistrict && `· Selected: ${selectedDistrict}`}
       </h4>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 overflow-y-auto flex-1 pr-2">
@@ -184,13 +184,13 @@ export default function StateDistrictMap({ state, districts, totalReformers, onB
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => setSelectedDistrict((s) => (s === d.district ? null : d.district))}
                 className={`p-3 rounded-lg border-2 text-left transition text-sm ${
-                  isSelected ? 'border-[#E8892C] ring-2 ring-[#E8892C]/30' : 'border-[#2C3E50]/20 hover:border-[#E8892C]/50'
+                  isSelected ? 'border-secondary ring-2 ring-secondary/30' : 'border-border hover:border-secondary/50'
                 }`}
                 style={{ backgroundColor: getHeatColor(d.count, maxCount) }}
                 title={`${d.district}: ${d.count} Reformers`}
               >
                 <p className="font-medium text-slate-800 truncate">{d.district}</p>
-                <p className="text-xs text-slate-600 mt-0.5">{d.count} Reformers</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{d.count} Reformers</p>
               </motion.button>
             );
           })

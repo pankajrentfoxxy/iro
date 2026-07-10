@@ -1,38 +1,35 @@
 // Fallback latest updates – shown when API returns empty (e.g. before seed runs)
 export const LATEST_UPDATES_FALLBACK = [
   {
-    title: 'Welcome to Indian Reform Organisation',
+    id: 'up-assembly-expansion',
+    title: 'Groups in Every Assembly Constituency — Uttar Pradesh',
     excerpt:
-      'Reforming India, Together. Join the movement and be part of citizen-led change across every state and district.',
-    imageUrl: undefined as string | undefined,
+      'IRO announces a major expansion: dedicated groups will be formed in every assembly constituency across every district of Uttar Pradesh. Join us in building an empowered, organised society.',
+    imageUrl: '/images/updates/up-assembly-expansion.png',
     publishedAt: new Date().toISOString(),
   },
   {
-    title: 'IRO Expands to 25 States',
+    id: 'up-team-recruitment',
+    title: 'IRO Needs Active Teams in Every District of UP',
     excerpt:
-      'Our network of reformers now spans 25 states and union territories. Volunteers are driving change at the grassroots level.',
-    imageUrl: undefined as string | undefined,
+      'We are building teams of 20–25 active members in every district of Uttar Pradesh. Take a step towards social reform — become part of this campaign for change. Contact: 9409889944 | 9409889955',
+    imageUrl: '/images/updates/up-team-recruitment.png',
     publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
-    title: 'Youth Engagement Programme Launched',
+    id: 'national-event',
+    title: 'IRO National Event — Reforming Society Together',
     excerpt:
-      'New initiative to engage young reformers through digital campaigns and campus outreach programmes.',
-    imageUrl: undefined as string | undefined,
+      'Leaders and members of the Indian Reformers Organisation come together at a national gathering to strengthen the movement for transparent governance and citizen-led reform.',
+    imageUrl: '/images/updates/national-event.png',
     publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
-    title: 'District-Level Reformer Meetups',
+    id: 'movement-in-action',
+    title: 'The Movement on the Ground',
     excerpt:
-      'Monthly meetups are being organized in districts to strengthen local networks and share best practices.',
-    imageUrl: undefined as string | undefined,
+      'From public rallies to grassroots outreach, IRO reformers are actively working across communities — raising voices, building awareness, and driving change at every level.',
+    imageUrl: '/images/updates/movement-in-action.png',
     publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    title: 'Transparency in Governance – Our Mission',
-    excerpt:
-      'IRO advocates for greater transparency in government processes and citizen participation in decision-making.',
-    imageUrl: undefined as string | undefined,
-    publishedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
   },
 ];

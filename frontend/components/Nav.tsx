@@ -50,15 +50,15 @@ export default function Nav({ loggedIn = false, user = null }: NavProps) {
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
-                    className="absolute left-0 top-full mt-1 py-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 z-50"
+                    className="absolute left-0 top-full mt-1 py-1 w-48 bg-white rounded-lg shadow-lg border border-border z-50"
                   >
-                    <Link href="/about" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                    <Link href="/about" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                       Vision & Mission
                     </Link>
-                    <Link href="/about#faq" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                    <Link href="/about#faq" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                       FAQ
                     </Link>
-                    <Link href="/about#timeline" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                    <Link href="/about#timeline" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                       Timeline
                     </Link>
                   </motion.div>
@@ -85,12 +85,12 @@ export default function Nav({ loggedIn = false, user = null }: NavProps) {
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
-                    className="absolute left-0 top-full mt-1 py-1 w-40 bg-white rounded-lg shadow-lg border border-slate-200 z-50"
+                    className="absolute left-0 top-full mt-1 py-1 w-40 bg-white rounded-lg shadow-lg border border-border z-50"
                   >
-                    <Link href="/media/gallery" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                    <Link href="/media/gallery" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                       Gallery
                     </Link>
-                    <Link href="/media/videos" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                    <Link href="/media/videos" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                       Videos
                     </Link>
                   </motion.div>
@@ -118,15 +118,15 @@ export default function Nav({ loggedIn = false, user = null }: NavProps) {
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -4 }}
-                      className="absolute right-0 top-full mt-1 py-1 w-40 bg-white rounded-lg shadow-lg border border-slate-200 z-50"
+                      className="absolute right-0 top-full mt-1 py-1 w-40 bg-white rounded-lg shadow-lg border border-border z-50"
                     >
-                      <Link href="/my-account" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                      <Link href="/my-account" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                         My Account
                       </Link>
-                      <Link href="/my-account/profile" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                      <Link href="/my-account/profile" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                         Profile
                       </Link>
-                      <Link href="/my-account/refer" className="block px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm">
+                      <Link href="/my-account/refer" className="block px-4 py-2 text-foreground hover:bg-muted text-sm">
                         Refer
                       </Link>
                       <button
@@ -135,7 +135,7 @@ export default function Nav({ loggedIn = false, user = null }: NavProps) {
                           localStorage.removeItem('token');
                           window.location.href = '/';
                         }}
-                        className="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50 text-sm"
+                        className="block w-full text-left px-4 py-2 text-foreground hover:bg-muted text-sm"
                       >
                         Logout
                       </button>

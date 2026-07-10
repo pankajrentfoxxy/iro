@@ -305,6 +305,30 @@ model HomepageStatsOverride {
   updatedAt       DateTime @updatedAt
 }
 
+// ============ PUBLIC REGISTRATIONS (Join the Movement) ============
+
+model Registration {
+  id         String   @id @default(uuid())
+  memberId   String   @unique // e.g. IRO-2026-A1B2C3
+  fullName   String?
+  mobile     String   @unique
+  email      String?
+  age        Int?
+  gender     String?
+  occupation String?
+  address    String?
+  state      String?
+  district   String?
+  pincode    String?
+  reason     String? // "Why do you want to join?"
+  createdAt  DateTime @default(now())
+
+  @@index([state])
+  @@index([district])
+  @@index([occupation])
+  @@index([createdAt])
+}
+
 // ============ LATEST UPDATES (Home Hero) ============
 
 model LatestUpdate {

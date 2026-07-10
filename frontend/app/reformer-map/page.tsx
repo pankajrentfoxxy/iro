@@ -38,14 +38,14 @@ export default function ReformerMapPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center bg-[#F7F4EF]">
-        <div className="animate-pulse text-[#2C3E50] font-medium">Loading map...</div>
+      <div className="min-h-[60vh] flex items-center justify-center bg-background">
+        <div className="animate-pulse text-muted-foreground font-medium">Loading map...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -54,14 +54,14 @@ export default function ReformerMapPage() {
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-[#E8892C] font-medium hover:text-[#B8692A] mb-4"
+            className="inline-flex items-center gap-2 text-secondary font-medium hover:text-secondary-dark mb-4"
           >
             ← Back to Home
           </Link>
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-[#0D1B2A] mb-2">
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-primary mb-2">
             Reformer Map
           </h1>
-          <p className="text-[#2C3E50]/70">
+          <p className="text-muted-foreground/70">
             Explore Reformer distribution across India. Hover on a state for count, click for district-wise breakdown.
           </p>
         </motion.div>
@@ -70,7 +70,7 @@ export default function ReformerMapPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-[#E8892C]/10"
+          className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border border-secondary/10"
         >
           <div className="min-h-[400px]">
             <AnimatePresence mode="wait">

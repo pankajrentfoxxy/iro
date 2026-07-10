@@ -199,23 +199,23 @@ export default function CMSPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <nav className="text-sm text-gray-500">Media / CMS</nav>
+        <nav className="text-sm text-muted-foreground">Media / CMS</nav>
       </div>
 
-      <h1 className="font-display font-bold text-[#0D1B2A] text-2xl mb-6">
+      <h1 className="font-display font-bold text-primary text-2xl mb-6">
         CMS
       </h1>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-gray-200 mb-6">
+      <div className="flex gap-2 border-b border-border mb-6">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition ${
               activeTab === tab.id
-                ? 'border-[#E8892C] text-[#E8892C]'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-secondary text-secondary'
+                : 'border-transparent text-muted-foreground hover:text-gray-700'
             }`}
           >
             {tab.label}
@@ -235,26 +235,26 @@ export default function CMSPage() {
           <div className="flex justify-end">
             <button
               onClick={openCreateNews}
-              className="flex items-center gap-2 px-4 py-2 bg-[#E8892C] text-white rounded-lg font-medium hover:bg-[#E8892C]/90"
+              className="flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg font-medium hover:bg-secondary/90"
             >
               <Plus size={18} />
               Create Post
             </button>
           </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
             {loading ? (
-              <div className="p-12 text-center text-gray-500">Loading...</div>
+              <div className="p-12 text-center text-muted-foreground">Loading...</div>
             ) : (
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-muted">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                     Title
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                     Date
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                     Actions
                   </th>
                 </tr>
@@ -263,9 +263,9 @@ export default function CMSPage() {
                 {updates.map((post) => (
                   <tr
                     key={post.id}
-                    className="border-b border-gray-100 hover:bg-gray-50"
+                    className="border-b border-border hover:bg-muted"
                   >
-                    <td className="px-4 py-3 font-medium text-[#0D1B2A]">
+                    <td className="px-4 py-3 font-medium text-primary">
                       {post.title}
                     </td>
                     <td className="px-4 py-3 text-sm">
@@ -298,22 +298,22 @@ export default function CMSPage() {
 
       {/* Press Releases tab - placeholder */}
       {activeTab === 'press' && (
-        <div className="bg-white rounded-xl p-12 text-center text-gray-500">
+        <div className="bg-white rounded-xl p-12 text-center text-muted-foreground">
           Press Releases – Coming soon
         </div>
       )}
 
       {/* Media Gallery tab - placeholder */}
       {activeTab === 'gallery' && (
-        <div className="bg-white rounded-xl p-12 text-center text-gray-500">
+        <div className="bg-white rounded-xl p-12 text-center text-muted-foreground">
           Media Gallery – Coming soon
         </div>
       )}
 
       {/* Homepage Stats Override tab */}
       {activeTab === 'stats' && (
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 max-w-xl">
-          <p className="text-sm text-gray-500 mb-6">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-border max-w-xl">
+          <p className="text-sm text-muted-foreground mb-6">
             These override the live count. Use only if live count is wrong.
           </p>
           <div className="flex items-center gap-2 mb-4">
@@ -340,7 +340,7 @@ export default function CMSPage() {
                 onChange={(e) =>
                   setStatsOverride({ ...statsOverride, totalReformers: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                className="w-full px-3 py-2 border border-border rounded-lg"
                 placeholder="e.g. 1250"
               />
             </div>
@@ -354,7 +354,7 @@ export default function CMSPage() {
                 onChange={(e) =>
                   setStatsOverride({ ...statsOverride, states: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                className="w-full px-3 py-2 border border-border rounded-lg"
                 placeholder="e.g. 28"
               />
             </div>
@@ -368,7 +368,7 @@ export default function CMSPage() {
                 onChange={(e) =>
                   setStatsOverride({ ...statsOverride, districts: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                className="w-full px-3 py-2 border border-border rounded-lg"
                 placeholder="e.g. 750"
               />
             </div>
@@ -382,7 +382,7 @@ export default function CMSPage() {
                 onChange={(e) =>
                   setStatsOverride({ ...statsOverride, growthPercent: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                className="w-full px-3 py-2 border border-border rounded-lg"
                 placeholder="e.g. 12.5"
               />
             </div>
@@ -390,13 +390,13 @@ export default function CMSPage() {
           <div className="flex gap-4">
             <button
               onClick={handleSaveStats}
-              className="px-4 py-2 bg-[#E8892C] text-white rounded-lg font-medium hover:bg-[#E8892C]/90"
+              className="px-4 py-2 bg-secondary text-white rounded-lg font-medium hover:bg-secondary/90"
             >
               Save Overrides
             </button>
             <button
               onClick={handleUseLiveData}
-              className="px-4 py-2 text-[#E8892C] hover:underline"
+              className="px-4 py-2 text-secondary hover:underline"
             >
               Use Live Data
             </button>
@@ -420,7 +420,7 @@ export default function CMSPage() {
                   type="text"
                   value={newsForm.title}
                   onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                  className="w-full px-3 py-2 border border-border rounded-lg"
                   placeholder="Post title"
                 />
               </div>
@@ -435,10 +435,10 @@ export default function CMSPage() {
                   }
                   maxLength={500}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                  className="w-full px-3 py-2 border border-border rounded-lg"
                   placeholder="Short excerpt"
                 />
-                <p className="text-xs text-gray-500 mt-1">{newsForm.excerpt.length}/500</p>
+                <p className="text-xs text-muted-foreground mt-1">{newsForm.excerpt.length}/500</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -448,7 +448,7 @@ export default function CMSPage() {
                   value={newsForm.body}
                   onChange={(e) => setNewsForm({ ...newsForm, body: e.target.value })}
                   rows={6}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                  className="w-full px-3 py-2 border border-border rounded-lg"
                   placeholder="Full content"
                 />
               </div>
@@ -460,7 +460,7 @@ export default function CMSPage() {
                   type="url"
                   value={newsForm.imageUrl}
                   onChange={(e) => setNewsForm({ ...newsForm, imageUrl: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                  className="w-full px-3 py-2 border border-border rounded-lg"
                   placeholder="https://..."
                 />
               </div>
@@ -471,14 +471,14 @@ export default function CMSPage() {
                   setNewsFormOpen(false);
                   setEditingId(null);
                 }}
-                className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 border border-border rounded-lg hover:bg-muted"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveNews}
                 disabled={!newsForm.title || !newsForm.excerpt}
-                className="px-4 py-2 bg-[#E8892C] text-white rounded-lg font-medium hover:bg-[#E8892C]/90 disabled:opacity-50"
+                className="px-4 py-2 bg-secondary text-white rounded-lg font-medium hover:bg-secondary/90 disabled:opacity-50"
               >
                 Save
               </button>

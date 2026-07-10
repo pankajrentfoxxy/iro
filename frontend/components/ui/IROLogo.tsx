@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface IROLogoProps {
   variant?: 'dark' | 'light';
   showText?: boolean;
@@ -14,8 +16,8 @@ function IROEmblem({
   size?: number;
   variant?: 'dark' | 'light';
 }) {
-  const stroke = variant === 'dark' ? '#E8892C' : '#0D1B2A';
-  const textFill = variant === 'dark' ? '#FFFFFF' : '#0D1B2A';
+  const stroke = variant === 'dark' ? '#FF9933' : '#0B3C6F';
+  const textFill = variant === 'dark' ? '#FFFFFF' : '#0B3C6F';
   const c = size / 2;
   const r1 = size * 0.457;
   const r2 = size * 0.293;
@@ -34,32 +36,21 @@ function IROEmblem({
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {/* Outer ring */}
       <circle cx={c} cy={c} r={r1} stroke={stroke} strokeWidth="2" />
-      {/* Inner ring */}
       <circle cx={c} cy={c} r={r2} stroke={stroke} strokeWidth="1.2" strokeOpacity="0.45" />
-      {/* Centre dot */}
       <circle cx={c} cy={c} r={dot} fill={stroke} />
-
-      {/* Cardinal spokes — outer segment */}
       <line x1={c} y1={size * 0.043} x2={c} y2={spokeOut} stroke={stroke} strokeWidth="2" strokeLinecap="round" />
       <line x1={c} y1={size - spokeOut} x2={c} y2={size * 0.957} stroke={stroke} strokeWidth="2" strokeLinecap="round" />
       <line x1={size * 0.043} y1={c} x2={spokeOut} y2={c} stroke={stroke} strokeWidth="2" strokeLinecap="round" />
       <line x1={size - spokeOut} y1={c} x2={size * 0.957} y2={c} stroke={stroke} strokeWidth="2" strokeLinecap="round" />
-
-      {/* Cardinal spokes — inner segment */}
       <line x1={c} y1={spokeOut} x2={c} y2={size * 0.348} stroke={stroke} strokeWidth="1" strokeLinecap="round" strokeOpacity="0.35" />
       <line x1={c} y1={size - size * 0.348} x2={c} y2={size - spokeOut} stroke={stroke} strokeWidth="1" strokeLinecap="round" strokeOpacity="0.35" />
       <line x1={spokeOut} y1={c} x2={size * 0.348} y2={c} stroke={stroke} strokeWidth="1" strokeLinecap="round" strokeOpacity="0.35" />
       <line x1={size - size * 0.348} y1={c} x2={size - spokeOut} y2={c} stroke={stroke} strokeWidth="1" strokeLinecap="round" strokeOpacity="0.35" />
-
-      {/* Diagonal spokes */}
       <line x1={diagOut} y1={diagOut} x2={diagIn} y2={diagIn} stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.7" />
       <line x1={size - diagOut} y1={size - diagOut} x2={size - diagIn} y2={size - diagIn} stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.7" />
       <line x1={size - diagOut} y1={diagOut} x2={size - diagIn} y2={diagIn} stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.7" />
       <line x1={diagOut} y1={size - diagOut} x2={diagIn} y2={size - diagIn} stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.7" />
-
-      {/* IRO text */}
       <text
         x={c}
         y={c + dot + fontSize * 0.4}
@@ -84,42 +75,38 @@ export default function IROLogo({
   size = 46,
   className = '',
 }: IROLogoProps) {
-  const nameColor = variant === 'dark' ? '#FFFFFF' : '#0D1B2A';
+  if (showText) {
+    const height = size;
+    const onDarkBg = variant === 'dark';
 
-  if (!showText) {
-    return <IROEmblem size={size} variant={variant} />;
+    return (
+      <div
+        className={`inline-flex items-center shrink-0 ${
+          onDarkBg
+            ? 'bg-white rounded-lg px-2.5 py-1 shadow-sm ring-1 ring-black/5 dark:bg-transparent dark:shadow-none dark:ring-0 dark:px-0 dark:py-0'
+            : ''
+        } ${className}`}
+      >
+        <Image
+          src="/images/iro-logo.png"
+          alt="Indian Reformers Organisation — Reforming Society, Empowering People"
+          width={Math.round(height * 2.6)}
+          height={height}
+          className="w-auto object-contain transition-[filter] duration-200 dark:brightness-0 dark:invert"
+          style={{ height: `${height}px`, width: 'auto' }}
+          priority
+        />
+      </div>
+    );
   }
 
   return (
-    <div className={`flex items-center gap-3 select-none ${className}`}>
+    <div
+      className={`inline-flex shrink-0 ${
+        variant === 'light' ? 'dark:brightness-0 dark:invert' : ''
+      } ${className}`}
+    >
       <IROEmblem size={size} variant={variant} />
-      <div>
-        <p
-          style={{
-            color: nameColor,
-            fontFamily: 'var(--font-display, Georgia, serif)',
-            fontSize: `${Math.round(size * 0.35)}px`,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            margin: 0,
-          }}
-        >
-          Indian Reformer Organisation
-        </p>
-        <p
-          style={{
-            color: '#E8892C',
-            fontSize: `${Math.round(size * 0.196)}px`,
-            fontWeight: 600,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            marginTop: '3px',
-            fontFamily: 'var(--font-sans, system-ui, sans-serif)',
-          }}
-        >
-          Reforming India, Together
-        </p>
-      </div>
     </div>
   );
 }

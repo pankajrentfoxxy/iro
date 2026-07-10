@@ -193,7 +193,7 @@ export default function IndiaMapD3({
     <div className="flex flex-col lg:flex-row gap-6">
       <div
         ref={containerRef}
-        className="flex-1 min-h-[400px] bg-[#F7F4EF] rounded-xl overflow-hidden flex items-center justify-center border border-[#E8892C]/10 relative"
+        className="flex-1 min-h-[400px] bg-background rounded-xl overflow-hidden flex items-center justify-center border border-secondary/10 relative"
       >
         <svg
           ref={svgRef}
@@ -201,19 +201,19 @@ export default function IndiaMapD3({
           style={{ maxWidth: '100%' }}
         />
         {!svgLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#F7F4EF]">
-            <span className="text-[#2C3E50] text-sm">Loading map...</span>
+          <div className="absolute inset-0 flex items-center justify-center bg-background">
+            <span className="text-muted-foreground text-sm">Loading map...</span>
           </div>
         )}
         {tooltip && (
           <div
-            className="absolute pointer-events-none z-10 px-3 py-1.5 bg-white/95 backdrop-blur border border-[#E8892C]/20 rounded-lg shadow-lg text-sm font-medium text-[#0D1B2A] whitespace-nowrap -translate-x-1/2 -translate-y-full"
+            className="absolute pointer-events-none z-10 px-3 py-1.5 bg-white/95 backdrop-blur border border-secondary/20 rounded-lg shadow-lg text-sm font-medium text-primary whitespace-nowrap -translate-x-1/2 -translate-y-full"
             style={{ left: tooltip.x, top: tooltip.y }}
           >
             {tooltip.text}
           </div>
         )}
-        <div className="absolute bottom-2 right-2 text-[#2C3E50]/60 text-xs">
+        <div className="absolute bottom-2 right-2 text-muted-foreground/60 text-xs">
           Scroll to zoom • Drag to pan
         </div>
       </div>
@@ -223,21 +223,21 @@ export default function IndiaMapD3({
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
-            className="lg:w-80 bg-white rounded-xl p-4 border border-[#E8892C]/10 shadow"
+            className="lg:w-80 bg-white rounded-xl p-4 border border-secondary/10 shadow"
           >
             <div className="flex justify-between items-start mb-4">
-              <h3 className="font-semibold text-[#0D1B2A]">{selectedState}</h3>
+              <h3 className="font-semibold text-primary">{selectedState}</h3>
               <button
                 onClick={() => setInternalSelected(null)}
-                className="text-[#2C3E50] hover:text-[#E8892C]"
+                className="text-muted-foreground hover:text-secondary"
               >
                 ×
               </button>
             </div>
-            <p className="text-2xl font-bold text-[#E8892C]">
+            <p className="text-2xl font-bold text-secondary">
               {dataMap[selectedState] ?? 0} {memberLabel}
             </p>
-            <p className="text-sm text-[#2C3E50]/70 mt-1">
+            <p className="text-sm text-muted-foreground/70 mt-1">
               Click districts in admin panel for drill-down
             </p>
           </motion.div>

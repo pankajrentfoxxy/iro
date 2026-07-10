@@ -143,7 +143,7 @@ export default function MyAccountProfilePage() {
   if (loading) {
     return (
       <div className="min-h-[200px] flex items-center justify-center">
-        <div className="animate-pulse text-[#2C3E50]">Loading profile...</div>
+        <div className="animate-pulse text-muted-foreground">Loading profile...</div>
       </div>
     );
   }
@@ -155,48 +155,48 @@ export default function MyAccountProfilePage() {
       className="space-y-6"
     >
       <div>
-        <h1 className="font-display text-2xl font-bold text-[#0D1B2A] mb-1">Profile</h1>
-        <p className="text-[#2C3E50]/70 text-sm">Manage your details and location</p>
+        <h1 className="font-display text-2xl font-bold text-primary mb-1">Profile</h1>
+        <p className="text-muted-foreground/70 text-sm">Manage your details and location</p>
       </div>
 
-      <form onSubmit={handleSave} className="bg-white rounded-xl p-6 shadow border border-[#E8892C]/10 space-y-4">
+      <form onSubmit={handleSave} className="bg-white rounded-xl p-6 shadow border border-secondary/10 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-[#2C3E50] mb-2">Name</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-2">Name</label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            className="w-full px-4 py-3 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-[#0D1B2A] focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C] transition"
+            className="w-full px-4 py-3 rounded-lg bg-background border border-border text-primary focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[#2C3E50] mb-2">Email (optional)</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-2">Email (optional)</label>
           <input
             type="email"
             value={form.email}
             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-            className="w-full px-4 py-3 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-[#0D1B2A] focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C] transition"
+            className="w-full px-4 py-3 rounded-lg bg-background border border-border text-primary focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[#2C3E50] mb-2">Age (optional)</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-2">Age (optional)</label>
           <input
             type="number"
             value={form.age}
             onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))}
             min={1}
             max={120}
-            className="w-full px-4 py-3 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-[#0D1B2A] focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C] transition"
+            className="w-full px-4 py-3 rounded-lg bg-background border border-border text-primary focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition"
           />
         </div>
 
-        <div className="pt-4 border-t border-[#E8892C]/10">
-          <h2 className="font-semibold text-[#0D1B2A] mb-2">Location</h2>
+        <div className="pt-4 border-t border-secondary/10">
+          <h2 className="font-semibold text-primary mb-2">Location</h2>
           <button
             type="button"
             onClick={handleGetLocation}
             disabled={locationLoading}
-            className="mb-4 py-2.5 px-5 bg-[#E8892C] text-white rounded-lg text-sm font-medium hover:bg-[#B8692A] disabled:opacity-50 transition"
+            className="mb-4 py-2.5 px-5 bg-secondary text-white rounded-lg text-sm font-medium hover:bg-secondary-dark disabled:opacity-50 transition"
           >
             {locationLoading ? 'Getting location...' : '📍 Use my location'}
           </button>
@@ -211,13 +211,13 @@ export default function MyAccountProfilePage() {
               { key: 'pincode', label: 'Pincode', placeholder: 'e.g. 400001' },
             ].map(({ key, label, placeholder }) => (
               <div key={key}>
-                <label className="block text-sm font-medium text-[#2C3E50] mb-1">{label}</label>
+                <label className="block text-sm font-medium text-muted-foreground mb-1">{label}</label>
                 <input
                   type="text"
                   value={form[key as keyof typeof form]}
                   onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
                   placeholder={placeholder}
-                  className="w-full px-4 py-2 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-[#0D1B2A] focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C] transition"
+                  className="w-full px-4 py-2 rounded-lg bg-background border border-border text-primary focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition"
                 />
               </div>
             ))}
@@ -225,9 +225,9 @@ export default function MyAccountProfilePage() {
         </div>
 
         {user?.referralCode && (
-          <div className="pt-4 border-t border-[#E8892C]/10">
-            <label className="block text-sm font-medium text-[#2C3E50] mb-1">Referral Code</label>
-            <p className="text-[#E8892C] font-mono font-semibold">{user.referralCode}</p>
+          <div className="pt-4 border-t border-secondary/10">
+            <label className="block text-sm font-medium text-muted-foreground mb-1">Referral Code</label>
+            <p className="text-secondary font-mono font-semibold">{user.referralCode}</p>
           </div>
         )}
 
@@ -235,7 +235,7 @@ export default function MyAccountProfilePage() {
         <button
           type="submit"
           disabled={saving}
-          className="w-full py-3 bg-[#E8892C] text-white rounded-lg font-semibold hover:bg-[#B8692A] disabled:opacity-50 transition"
+          className="w-full py-3 bg-secondary text-white rounded-lg font-semibold hover:bg-secondary-dark disabled:opacity-50 transition"
         >
           {saving ? 'Saving...' : 'Save Profile'}
         </button>

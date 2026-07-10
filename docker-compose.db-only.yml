@@ -1,14 +1,17 @@
-# IRO - Database Only (deploy now, add backend/frontend later)
+# IRO - Local infra (PostgreSQL + Redis)
 # Usage: docker compose -f docker-compose.db-only.yml up -d
+# Copy .env.db-only.example to .env and set IRO_DB_PASSWORD before first run.
 
 services:
   postgres:
     image: postgres:16-alpine
     container_name: iro-postgres
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: ${IRO_DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${IRO_DB_PASSWORD}
+      POSTGRES_PASSWORD: ${IRO_DB_PASSWORD:-postgres}
       POSTGRES_DB: ${IRO_DB_NAME:-iro}
     volumes:
       - iro_postgres_data:/var/lib/postgresql/data
@@ -22,6 +25,23 @@ services:
         limits:
           cpus: '0.5'
           memory: 512m
+
+  redis:
+    image: redis:7-alpine
+    container_name: iro-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128m
 
 volumes:
   iro_postgres_data:

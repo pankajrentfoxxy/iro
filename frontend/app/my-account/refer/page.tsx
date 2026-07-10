@@ -45,7 +45,7 @@ export default function MyAccountReferPage() {
   if (loading) {
     return (
       <div className="min-h-[200px] flex items-center justify-center">
-        <div className="animate-pulse text-[#2C3E50]">Loading...</div>
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -57,25 +57,25 @@ export default function MyAccountReferPage() {
       className="space-y-6"
     >
       <div>
-        <h1 className="font-display text-2xl font-bold text-[#0D1B2A] mb-1">Refer & Grow</h1>
-        <p className="text-[#2C3E50]/70 text-sm">
+        <h1 className="font-display text-2xl font-bold text-primary mb-1">Refer & Grow</h1>
+        <p className="text-muted-foreground/70 text-sm">
           Share your referral code with friends. When they join IRO, you both benefit.
         </p>
       </div>
 
-      <div className="bg-white rounded-xl p-6 shadow border border-[#E8892C]/10 space-y-4">
+      <div className="bg-white rounded-xl p-6 shadow border border-secondary/10 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-[#2C3E50] mb-1">Your Referral Code</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">Your Referral Code</label>
           <div className="flex gap-2">
             <input
               readOnly
               value={user?.referralCode || '-'}
-              className="flex-1 px-4 py-3 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 font-mono font-semibold text-[#0D1B2A]"
+              className="flex-1 px-4 py-3 rounded-lg bg-background border border-border font-mono font-semibold text-primary"
             />
             <button
               type="button"
               onClick={handleCopy}
-              className="px-4 py-3 bg-[#E8892C] text-white rounded-lg font-medium hover:bg-[#B8692A] transition"
+              className="px-4 py-3 bg-secondary text-white rounded-lg font-medium hover:bg-secondary-dark transition"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
@@ -83,25 +83,25 @@ export default function MyAccountReferPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[#2C3E50] mb-1">Share Link</label>
+          <label className="block text-sm font-medium text-muted-foreground mb-1">Share Link</label>
           <div className="flex gap-2">
             <input
               readOnly
               value={shareUrl}
-              className="flex-1 px-4 py-3 rounded-lg bg-[#F7F4EF] border border-[#2C3E50]/20 text-sm text-[#2C3E50] truncate"
+              className="flex-1 px-4 py-3 rounded-lg bg-background border border-border text-sm text-muted-foreground truncate"
             />
             <button
               type="button"
               onClick={handleCopyLink}
-              className="px-4 py-3 bg-[#0D1B2A] text-white rounded-lg font-medium hover:bg-[#2C3E50] transition"
+              className="px-4 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
         </div>
 
-        <p className="text-center text-[#2C3E50]/60 text-sm pt-2">
-          <a href="/my-account/profile" className="text-[#E8892C] hover:underline">Edit Profile</a>
+        <p className="text-center text-muted-foreground/60 text-sm pt-2">
+          <a href="/my-account/profile" className="text-secondary hover:underline">Edit Profile</a>
         </p>
       </div>
     </motion.div>

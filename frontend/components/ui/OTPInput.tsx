@@ -84,7 +84,7 @@ export default function OTPInput({
           className={`w-11 h-12 text-center text-lg font-bold rounded-lg border-2 bg-white transition outline-none focus:ring-2 focus:ring-offset-1 ${
             error
               ? 'border-red-500 focus:ring-red-500/30 focus:border-red-500'
-              : 'border-[#2C3E50]/20 focus:border-[#E8892C] focus:ring-[#E8892C]/30'
+              : 'border-border focus:border-secondary focus:ring-secondary/30'
           } ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}
           aria-label={`Digit ${i + 1}`}
         />

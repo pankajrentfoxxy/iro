@@ -100,17 +100,17 @@ export default function AdminMediaPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F7F4EF]">
-        <p className="text-[#2C3E50]">Loading...</p>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
-      <nav className="bg-[#0D1B2A] text-white">
+    <div className="min-h-screen bg-background">
+      <nav className="bg-card border-b border-border text-foreground shadow-card">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/admin" className="text-lg font-bold hover:text-[#E8892C] transition">
+          <Link href="/admin" className="text-lg font-bold hover:text-secondary transition">
             ← IRO Admin
           </Link>
           <span className="text-sm text-white/70">Media (Gallery & Videos)</span>
@@ -118,20 +118,20 @@ export default function AdminMediaPage() {
       </nav>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="font-display text-2xl font-bold text-[#0D1B2A] mb-6">Media Library</h1>
-        <p className="text-[#2C3E50]/70 mb-6">
+        <h1 className="font-display text-2xl font-bold text-primary mb-6">Media Library</h1>
+        <p className="text-muted-foreground/70 mb-6">
           Add photos to Gallery and videos (YouTube links) to Videos. These appear on the public Media page.
         </p>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-white rounded-lg shadow border border-[#E8892C]/10 w-fit mb-6">
+        <div className="flex gap-1 p-1 bg-white rounded-lg shadow border border-secondary/10 w-fit mb-6">
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
               className={`px-4 py-2 rounded-md text-sm font-medium transition ${
-                tab === t.id ? 'bg-[#E8892C] text-white' : 'text-[#2C3E50] hover:bg-[#2C3E50]/5'
+                tab === t.id ? 'bg-secondary text-white' : 'text-muted-foreground hover:bg-muted'
               }`}
             >
               {t.label}
@@ -144,9 +144,9 @@ export default function AdminMediaPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleCreate}
-          className="bg-white rounded-xl p-6 shadow border border-[#E8892C]/10 mb-8"
+          className="bg-white rounded-xl p-6 shadow border border-secondary/10 mb-8"
         >
-          <h2 className="font-semibold text-[#0D1B2A] mb-4">Add New Item</h2>
+          <h2 className="font-semibold text-primary mb-4">Add New Item</h2>
           <div className="flex flex-wrap gap-4 mb-4">
             <label className="flex items-center gap-2">
               <input
@@ -169,34 +169,34 @@ export default function AdminMediaPage() {
           </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">Title</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Title</label>
               <input
                 type="text"
                 value={form.title}
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-[#2C3E50]/20 bg-[#F7F4EF]"
+                className="w-full px-4 py-2 rounded-lg border border-border bg-background"
                 placeholder="e.g. IRO State Meet 2024"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#2C3E50] mb-1">Caption (optional)</label>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Caption (optional)</label>
               <input
                 type="text"
                 value={form.caption}
                 onChange={(e) => setForm((f) => ({ ...f, caption: e.target.value }))}
-                className="w-full px-4 py-2 rounded-lg border border-[#2C3E50]/20 bg-[#F7F4EF]"
+                className="w-full px-4 py-2 rounded-lg border border-border bg-background"
                 placeholder="Brief description"
               />
             </div>
             {form.type === 'gallery' && (
               <div>
-                <label className="block text-sm font-medium text-[#2C3E50] mb-1">Image URL</label>
+                <label className="block text-sm font-medium text-muted-foreground mb-1">Image URL</label>
                 <input
                   type="url"
                   value={form.imageUrl}
                   onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-[#2C3E50]/20 bg-[#F7F4EF]"
+                  className="w-full px-4 py-2 rounded-lg border border-border bg-background"
                   placeholder="https://..."
                   required
                 />
@@ -204,12 +204,12 @@ export default function AdminMediaPage() {
             )}
             {form.type === 'video' && (
               <div>
-                <label className="block text-sm font-medium text-[#2C3E50] mb-1">YouTube URL</label>
+                <label className="block text-sm font-medium text-muted-foreground mb-1">YouTube URL</label>
                 <input
                   type="url"
                   value={form.videoUrl}
                   onChange={(e) => setForm((f) => ({ ...f, videoUrl: e.target.value }))}
-                  className="w-full px-4 py-2 rounded-lg border border-[#2C3E50]/20 bg-[#F7F4EF]"
+                  className="w-full px-4 py-2 rounded-lg border border-border bg-background"
                   placeholder="https://www.youtube.com/watch?v=..."
                   required
                 />
@@ -220,7 +220,7 @@ export default function AdminMediaPage() {
           <button
             type="submit"
             disabled={saving}
-            className="mt-4 px-6 py-2.5 bg-[#E8892C] text-white rounded-lg font-medium hover:bg-[#B8692A] disabled:opacity-50"
+            className="mt-4 px-6 py-2.5 bg-secondary text-white rounded-lg font-medium hover:bg-secondary-dark disabled:opacity-50"
           >
             {saving ? 'Adding...' : 'Add Item'}
           </button>
@@ -233,7 +233,7 @@ export default function AdminMediaPage() {
               key={item.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl overflow-hidden shadow border border-[#E8892C]/10"
+              className="bg-white rounded-xl overflow-hidden shadow border border-secondary/10"
             >
               {item.type === 'gallery' && item.imageUrl ? (
                 <img
@@ -242,20 +242,20 @@ export default function AdminMediaPage() {
                   className="w-full aspect-square object-cover"
                 />
               ) : item.type === 'video' && item.videoUrl ? (
-                <div className="aspect-video bg-[#2C3E50]/10 flex items-center justify-center">
-                  <span className="text-[#2C3E50]/60 text-sm">Video</span>
+                <div className="aspect-video bg-muted flex items-center justify-center">
+                  <span className="text-muted-foreground/60 text-sm">Video</span>
                 </div>
               ) : (
-                <div className="aspect-square bg-[#2C3E50]/10 flex items-center justify-center">
-                  <span className="text-[#2C3E50]/60 text-sm">No preview</span>
+                <div className="aspect-square bg-muted flex items-center justify-center">
+                  <span className="text-muted-foreground/60 text-sm">No preview</span>
                 </div>
               )}
               <div className="p-3">
-                <h3 className="font-medium text-[#0D1B2A] truncate">{item.title}</h3>
+                <h3 className="font-medium text-primary truncate">{item.title}</h3>
                 {item.caption && (
-                  <p className="text-sm text-[#2C3E50]/70 truncate mt-0.5">{item.caption}</p>
+                  <p className="text-sm text-muted-foreground/70 truncate mt-0.5">{item.caption}</p>
                 )}
-                <p className="text-xs text-[#2C3E50]/50 mt-1">
+                <p className="text-xs text-muted-foreground/80 mt-1">
                   {new Date(item.createdAt).toLocaleDateString()} · {item.type}
                 </p>
                 <button
@@ -271,7 +271,7 @@ export default function AdminMediaPage() {
         </div>
 
         {items.length === 0 && (
-          <p className="text-[#2C3E50]/60 text-center py-12">
+          <p className="text-muted-foreground/60 text-center py-12">
             No media items yet. Add photos or videos above.
           </p>
         )}

@@ -126,16 +126,16 @@ export default function CampaignsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <nav className="text-sm text-gray-500">Campaigns</nav>
+        <nav className="text-sm text-muted-foreground">Campaigns</nav>
       </div>
 
       <div className="flex justify-between items-center mb-6">
-        <h1 className="font-display font-bold text-[#0D1B2A] text-2xl">
+        <h1 className="font-display font-bold text-primary text-2xl">
           Campaigns
         </h1>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-[#E8892C] text-white rounded-lg font-medium hover:bg-[#E8892C]/90"
+          className="flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg font-medium hover:bg-secondary/90"
         >
           <Plus size={18} />
           Create New Campaign
@@ -165,41 +165,41 @@ export default function CampaignsPage() {
       )}
 
       {/* Campaigns list */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-gray-500">Loading campaigns...</div>
+          <div className="p-12 text-center text-muted-foreground">Loading campaigns...</div>
         ) : (
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-muted">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                 Title
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                 Type
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                 Status
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                 Start
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                 End
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                 Participants
               </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
             {campaigns.map((c) => (
-              <tr key={c.id} className="border-b border-gray-100 hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium text-[#0D1B2A]">{c.title}</td>
-                <td className="px-4 py-3 text-sm text-gray-600">{c.campaignType}</td>
+              <tr key={c.id} className="border-b border-border hover:bg-muted">
+                <td className="px-4 py-3 font-medium text-primary">{c.title}</td>
+                <td className="px-4 py-3 text-sm text-muted-foreground">{c.campaignType}</td>
                 <td className="px-4 py-3">
                   <span
                     className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[c.status] || 'bg-gray-100 text-gray-700'}`}
@@ -214,19 +214,19 @@ export default function CampaignsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => openEdit(c)}
-                      className="p-1.5 hover:bg-gray-100 rounded text-gray-600"
+                      className="p-1.5 hover:bg-gray-100 rounded text-muted-foreground"
                       title="Edit"
                     >
                       <Edit size={16} />
                     </button>
                     <button
-                      className="p-1.5 hover:bg-gray-100 rounded text-gray-600"
+                      className="p-1.5 hover:bg-gray-100 rounded text-muted-foreground"
                       title="View"
                     >
                       <Eye size={16} />
                     </button>
                     <button
-                      className="p-1.5 hover:bg-gray-100 rounded text-gray-600"
+                      className="p-1.5 hover:bg-gray-100 rounded text-muted-foreground"
                       title="Pause/Resume"
                     >
                       <Pause size={16} />
@@ -263,7 +263,7 @@ export default function CampaignsPage() {
                     type="text"
                     value={form.title}
                     onChange={(e) => setForm({ ...form, title: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 border border-border rounded-lg"
                     placeholder="Campaign title"
                   />
                 </div>
@@ -275,7 +275,7 @@ export default function CampaignsPage() {
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
                     rows={2}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 border border-border rounded-lg"
                     placeholder="Optional description"
                   />
                 </div>
@@ -286,7 +286,7 @@ export default function CampaignsPage() {
                   <select
                     value={form.campaignType}
                     onChange={(e) => setForm({ ...form, campaignType: e.target.value as CampaignType })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 border border-border rounded-lg"
                   >
                     <option value="SMS">SMS</option>
                     <option value="WHATSAPP">WhatsApp</option>
@@ -305,10 +305,10 @@ export default function CampaignsPage() {
                     }
                     maxLength={1600}
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 border border-border rounded-lg"
                     placeholder="Message to send"
                   />
-                  <p className="text-xs text-gray-500 mt-1">{form.messageContent.length}/1600</p>
+                  <p className="text-xs text-muted-foreground mt-1">{form.messageContent.length}/1600</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -318,7 +318,7 @@ export default function CampaignsPage() {
                     type="text"
                     value={form.targetState}
                     onChange={(e) => setForm({ ...form, targetState: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 border border-border rounded-lg"
                     placeholder="e.g. Uttar Pradesh (leave empty for all)"
                   />
                 </div>
@@ -330,7 +330,7 @@ export default function CampaignsPage() {
                     type="text"
                     value={form.targetDistrict}
                     onChange={(e) => setForm({ ...form, targetDistrict: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 border border-border rounded-lg"
                     placeholder="Optional"
                   />
                 </div>
@@ -342,7 +342,7 @@ export default function CampaignsPage() {
                     type="text"
                     value={form.targetTehsil}
                     onChange={(e) => setForm({ ...form, targetTehsil: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                    className="w-full px-3 py-2 border border-border rounded-lg"
                     placeholder="Optional"
                   />
                 </div>
@@ -350,14 +350,14 @@ export default function CampaignsPage() {
               <div className="flex gap-2 mt-8">
                 <button
                   onClick={() => setPanelOpen(false)}
-                  className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 border border-border rounded-lg hover:bg-muted"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={!!editingId || !form.title || !form.messageContent}
-                  className="px-4 py-2 bg-[#E8892C] text-white rounded-lg hover:bg-[#E8892C]/90 disabled:opacity-50"
+                  className="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary/90 disabled:opacity-50"
                   title={editingId ? 'Campaign edit not supported' : ''}
                 >
                   {editingId ? 'View only' : 'Create & Send'}

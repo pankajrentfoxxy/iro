@@ -38,14 +38,14 @@ export default function MyAccountLayout({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F7F4EF]">
-        <div className="animate-pulse text-[#2C3E50]">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
@@ -54,12 +54,12 @@ export default function MyAccountLayout({
             animate={{ opacity: 1, x: 0 }}
             className="lg:w-64 shrink-0"
           >
-            <div className="bg-white rounded-xl shadow-lg border border-[#E8892C]/10 overflow-hidden">
-              <div className="p-4 border-b border-[#E8892C]/10">
+            <div className="bg-white rounded-xl shadow-lg border border-secondary/10 overflow-hidden">
+              <div className="p-4 border-b border-secondary/10">
                 <Link href="/">
                   <IROLogo variant="light" size={36} showText={false} />
                 </Link>
-                <h2 className="font-display text-lg font-bold text-[#0D1B2A] mt-3">
+                <h2 className="font-display text-lg font-bold text-primary mt-3">
                   My Account
                 </h2>
               </div>
@@ -70,18 +70,18 @@ export default function MyAccountLayout({
                     href={link.href}
                     className={`block px-4 py-3 rounded-lg text-sm font-medium transition ${
                       pathname === link.href
-                        ? 'bg-[#E8892C]/15 text-[#E8892C]'
-                        : 'text-[#2C3E50] hover:bg-[#2C3E50]/5'
+                        ? 'bg-secondary/15 text-secondary'
+                        : 'text-muted-foreground hover:bg-muted'
                     }`}
                   >
                     {link.label}
                   </Link>
                 ))}
               </nav>
-              <div className="p-4 border-t border-[#E8892C]/10">
+              <div className="p-4 border-t border-secondary/10">
                 <Link
                   href="/"
-                  className="text-sm text-[#2C3E50]/70 hover:text-[#E8892C]"
+                  className="text-sm text-muted-foreground/70 hover:text-secondary"
                 >
                   ← Back to Home
                 </Link>

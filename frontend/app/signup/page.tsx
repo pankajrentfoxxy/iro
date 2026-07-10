@@ -27,8 +27,8 @@ function SignupForm() {
   }, [searchParams]);
 
   const inputClass =
-    'w-full px-3 py-2.5 text-sm rounded-lg border border-[#2C3E50]/20 bg-white text-[#0D1B2A] placeholder-[#2C3E50]/50 focus:outline-none focus:ring-2 focus:ring-[#E8892C]/30 focus:border-[#E8892C] transition';
-  const labelClass = 'block text-xs font-medium text-[#2C3E50] mb-1.5';
+    'w-full px-3 py-2.5 text-sm rounded-lg border border-border bg-white text-primary placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition';
+  const labelClass = 'block text-xs font-medium text-muted-foreground mb-1.5';
 
   const handleRequestOTP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,8 +100,8 @@ function SignupForm() {
   return (
     <div className="min-h-screen flex">
       {/* Left: Branding */}
-      <div className="hidden lg:flex lg:w-[42%] bg-[#0D1B2A] flex-col justify-between p-10 text-white relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[#E8892C]" />
+      <div className="hidden lg:flex lg:w-[42%] bg-primary flex-col justify-between p-10 text-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-secondary" />
         <Link href="/">
           <IROLogo variant="dark" size={42} showText={false} />
         </Link>
@@ -109,7 +109,7 @@ function SignupForm() {
           <h2 className="font-display text-2xl font-semibold tracking-tight mb-2">
             Indian Reformer Organisation
           </h2>
-          <p className="text-[#E8892C] text-sm leading-relaxed max-w-xs font-medium">
+          <p className="text-secondary text-sm leading-relaxed max-w-xs font-medium">
             Reforming India, Together.
           </p>
         </div>
@@ -117,7 +117,7 @@ function SignupForm() {
       </div>
 
       {/* Right: Form */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-[#F7F4EF] overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-6 bg-background overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, x: 12 }}
           animate={{ opacity: 1, x: 0 }}
@@ -134,14 +134,14 @@ function SignupForm() {
               <div
                 key={s}
                 className={`h-1 flex-1 rounded-full transition ${
-                  step >= s ? 'bg-[#E8892C]' : 'bg-[#2C3E50]/20'
+                  step >= s ? 'bg-secondary' : 'bg-[#2C3E50]/20'
                 }`}
               />
             ))}
           </div>
 
-          <h1 className="font-display text-xl font-semibold text-[#0D1B2A] mb-1">Create account</h1>
-          <p className="text-[#2C3E50]/70 text-sm mb-6">
+          <h1 className="font-display text-xl font-semibold text-primary mb-1">Create account</h1>
+          <p className="text-muted-foreground/70 text-sm mb-6">
             {step === 1 && 'Enter your phone number'}
             {step === 2 && 'Enter the OTP sent to your phone'}
             {step === 3 && 'Complete your profile'}
@@ -172,7 +172,7 @@ function SignupForm() {
                 <button
                   type="submit"
                   disabled={loading || phone.length !== 10}
-                  className="w-full py-2.5 bg-[#E8892C] text-white text-sm font-semibold rounded-lg hover:bg-[#B8692A] disabled:opacity-50 transition"
+                  className="w-full py-2.5 bg-secondary text-white text-sm font-semibold rounded-lg hover:bg-secondary-dark disabled:opacity-50 transition"
                 >
                   {loading ? 'Sending OTP...' : 'Send OTP'}
                 </button>
@@ -188,7 +188,7 @@ function SignupForm() {
                 onSubmit={handleVerifyAndContinue}
                 className="space-y-4"
               >
-                <p className="text-[#2C3E50] text-xs">
+                <p className="text-muted-foreground text-xs">
                   OTP sent to ****{phone.slice(-4)}
                 </p>
                 <OTPInput
@@ -202,7 +202,7 @@ function SignupForm() {
                 <button
                   type="submit"
                   disabled={loading || otp.length !== 6}
-                  className="w-full py-2.5 bg-[#E8892C] text-white text-sm font-semibold rounded-lg hover:bg-[#B8692A] disabled:opacity-50 transition"
+                  className="w-full py-2.5 bg-secondary text-white text-sm font-semibold rounded-lg hover:bg-secondary-dark disabled:opacity-50 transition"
                 >
                   Verify & Continue
                 </button>
@@ -213,7 +213,7 @@ function SignupForm() {
                     setOtp('');
                     setError('');
                   }}
-                  className="w-full py-1.5 text-[#2C3E50]/60 hover:text-[#0D1B2A] text-xs"
+                  className="w-full py-1.5 text-muted-foreground/60 hover:text-primary text-xs"
                 >
                   Change number
                 </button>
@@ -265,14 +265,14 @@ function SignupForm() {
                 <button
                   type="submit"
                   disabled={loading || !name.trim()}
-                  className="w-full py-2.5 bg-[#E8892C] text-white text-sm font-semibold rounded-lg hover:bg-[#B8692A] disabled:opacity-50 transition"
+                  className="w-full py-2.5 bg-secondary text-white text-sm font-semibold rounded-lg hover:bg-secondary-dark disabled:opacity-50 transition"
                 >
                   {loading ? 'Creating account...' : 'Complete Sign Up'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full py-1.5 text-[#2C3E50]/60 hover:text-[#0D1B2A] text-xs"
+                  className="w-full py-1.5 text-muted-foreground/60 hover:text-primary text-xs"
                 >
                   ← Back to OTP
                 </button>
@@ -280,9 +280,9 @@ function SignupForm() {
             )}
           </AnimatePresence>
 
-          <p className="mt-6 text-center text-[#2C3E50] text-sm">
+          <p className="mt-6 text-center text-muted-foreground text-sm">
             Already have an account?{' '}
-            <Link href="/login" className="font-medium text-[#E8892C] hover:text-[#B8692A]">
+            <Link href="/login" className="font-medium text-secondary hover:text-secondary-dark">
               Sign in
             </Link>
           </p>
@@ -296,8 +296,8 @@ export default function SignupPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#F7F4EF]">
-          <div className="animate-pulse text-[#2C3E50]">Loading...</div>
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="animate-pulse text-muted-foreground">Loading...</div>
         </div>
       }
     >

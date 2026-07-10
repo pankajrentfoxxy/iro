@@ -27,41 +27,41 @@ export default function CampaignsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-12"
         >
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-[#0D1B2A] mb-2">
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-primary mb-2">
             Campaigns
           </h1>
-          <p className="text-[#2C3E50]/80">
+          <p className="text-muted-foreground">
             Our initiatives and outreach programmes across India
           </p>
         </motion.section>
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-pulse text-[#2C3E50]">Loading campaigns...</div>
+            <div className="animate-pulse text-muted-foreground">Loading campaigns...</div>
           </div>
         ) : campaigns.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl p-12 md:p-16 text-center shadow-lg border border-[#E8892C]/10"
+            className="bg-white rounded-2xl p-12 md:p-16 text-center shadow-lg border border-secondary/10"
           >
             <div className="max-w-md mx-auto">
-              <h2 className="font-display text-xl font-semibold text-[#0D1B2A] mb-3">
+              <h2 className="font-display text-xl font-semibold text-primary mb-3">
                 No active campaigns yet
               </h2>
-              <p className="text-[#2C3E50]/70 text-sm mb-6">
+              <p className="text-muted-foreground/70 text-sm mb-6">
                 We are building campaigns to drive change across India. Join the movement to be part of future initiatives.
               </p>
               <Link
                 href="/join-the-movement"
-                className="inline-block px-6 py-3 bg-[#E8892C] text-white font-semibold rounded-lg hover:bg-[#B8692A] transition-colors"
+                className="inline-block px-6 py-3 bg-secondary text-white font-semibold rounded-lg hover:bg-secondary-dark transition-colors"
               >
                 Join the Movement
               </Link>
@@ -80,28 +80,28 @@ export default function CampaignsPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 * i }}
-                className="bg-white rounded-xl p-6 shadow-lg border border-[#E8892C]/10"
+                className="bg-white rounded-xl p-6 shadow-lg border border-secondary/10"
               >
                 <div className="flex items-start justify-between gap-4 mb-3">
-                  <h3 className="font-display text-lg font-semibold text-[#0D1B2A]">
+                  <h3 className="font-display text-lg font-semibold text-primary">
                     {c.title}
                   </h3>
                   <span
                     className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                       c.status === 'completed'
-                        ? 'bg-[#2C3E50]/10 text-[#2C3E50]'
+                        ? 'bg-muted text-muted-foreground'
                         : c.status === 'running'
-                        ? 'bg-[#E8892C]/20 text-[#E8892C]'
-                        : 'bg-[#2C3E50]/10 text-[#2C3E50]'
+                        ? 'bg-secondary/20 text-secondary'
+                        : 'bg-muted text-muted-foreground'
                     }`}
                   >
                     {c.status}
                   </span>
                 </div>
                 {c.description && (
-                  <p className="text-[#2C3E50]/70 text-sm mb-3 line-clamp-3">{c.description}</p>
+                  <p className="text-muted-foreground/70 text-sm mb-3 line-clamp-3">{c.description}</p>
                 )}
-                <div className="flex flex-wrap gap-2 text-xs text-[#2C3E50]/60">
+                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground/60">
                   <span className="capitalize">{c.campaignType.toLowerCase()}</span>
                   {c.targetState && <span>• {c.targetState}</span>}
                   <span>
@@ -114,7 +114,7 @@ export default function CampaignsPage() {
         )}
 
         <p className="mt-12 text-center">
-          <Link href="/" className="text-[#E8892C] hover:text-[#B8692A] font-medium text-sm">
+          <Link href="/" className="text-secondary hover:text-secondary-dark font-medium text-sm">
             ← Back to Home
           </Link>
         </p>

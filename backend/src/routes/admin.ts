@@ -151,6 +151,98 @@ router.delete('/media/:id', async (req: AuthRequest, res: Response) => {
   res.json({ success: true });
 });
 
+// ============ REGISTRATIONS (Join the Movement) ============
+
+function buildRegistrationWhere(query: Record<string, unknown>) {
+  const { search, state, district, occupation, dateFrom, dateTo } = query as Record<string, string | undefined>;
+  const where: Record<string, unknown> = {};
+  if (search) {
+    where.OR = [
+      { fullName: { contains: search, mode: 'insensitive' } },
+      { mobile: { contains: search } },
+      { memberId: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+  if (state) where.state = state;
+  if (district) where.district = { equals: district, mode: 'insensitive' };
+  if (occupation) where.occupation = { contains: occupation, mode: 'insensitive' };
+  if (dateFrom || dateTo) {
+    const createdAt: Record<string, Date> = {};
+    if (dateFrom) createdAt.gte = new Date(dateFrom);
+    if (dateTo) {
+      const end = new Date(dateTo);
+      end.setHours(23, 59, 59, 999);
+      createdAt.lte = end;
+    }
+    where.createdAt = createdAt;
+  }
+  return where;
+}
+
+// List registrations with search, filters and pagination
+router.get('/registrations', async (req: AuthRequest, res: Response) => {
+  const page = Math.max(1, parseInt(String(req.query.page ?? '1'), 10) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(String(req.query.limit ?? '20'), 10) || 20));
+  const where = buildRegistrationWhere(req.query);
+
+  const [total, items, states] = await Promise.all([
+    prisma.registration.count({ where }),
+    prisma.registration.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.registration.groupBy({ by: ['state'], _count: { id: true } }),
+  ]);
+
+  res.json({
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+    states: states.map((s) => s.state).sort(),
+    registrations: items.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() })),
+  });
+});
+
+// Export registrations as CSV (honours the same filters)
+router.get('/registrations/export', async (req: AuthRequest, res: Response) => {
+  const where = buildRegistrationWhere(req.query);
+  const items = await prisma.registration.findMany({
+    where,
+    orderBy: { createdAt: 'desc' },
+    take: 10000,
+  });
+
+  const esc = (v: string | number | null) => {
+    const s = v == null ? '' : String(v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const header = 'Member ID,Full Name,Mobile,Email,Age,Gender,Occupation,Address,State,District,Pincode,Reason,Registered At';
+  const rows = items.map((r) =>
+    [
+      r.memberId, r.fullName, r.mobile, r.email, r.age, r.gender, r.occupation,
+      r.address, r.state, r.district, r.pincode, r.reason,
+      r.createdAt.toISOString().slice(0, 19).replace('T', ' '),
+    ].map(esc).join(','),
+  );
+  const csv = [header, ...rows].join('\n');
+
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="iro-registrations-${new Date().toISOString().slice(0, 10)}.csv"`);
+  res.send('\uFEFF' + csv); // BOM so Excel opens UTF-8 correctly
+});
+
+// Single registration details
+router.get('/registrations/:id', async (req: AuthRequest, res: Response) => {
+  const registration = await prisma.registration.findUnique({ where: { id: req.params.id } });
+  if (!registration) {
+    return res.status(404).json({ error: 'Registration not found' });
+  }
+  res.json({ ...registration, createdAt: registration.createdAt.toISOString() });
+});
+
 // ============ HOMEPAGE STATS OVERRIDE ============
 
 const statsOverrideSchema = z.object({

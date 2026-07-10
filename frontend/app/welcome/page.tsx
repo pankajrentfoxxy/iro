@@ -59,18 +59,18 @@ export default function WelcomePage() {
       <main className="pt-20 pb-16 px-4">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-bold text-primary mb-6">{WELCOME_MESSAGE.title}</h1>
-          <div className="prose prose-slate max-w-none text-slate-600 whitespace-pre-line">
+          <div className="prose prose-slate max-w-none text-muted-foreground whitespace-pre-line">
             {WELCOME_MESSAGE.body}
           </div>
 
-          <div className="mt-8 pt-8 border-t border-slate-200">
+          <div className="mt-8 pt-8 border-t border-border">
             <h2 className="text-lg font-semibold text-primary mb-4">Connect with us</h2>
             <div className="flex flex-wrap gap-4">
               <a
                 href={WELCOME_MESSAGE.socialLinks.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition text-slate-700"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-border transition text-foreground"
               >
                 {SOCIAL_ICONS.facebook}
                 <span>Facebook</span>
@@ -79,7 +79,7 @@ export default function WelcomePage() {
                 href={WELCOME_MESSAGE.socialLinks.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition text-slate-700"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-border transition text-foreground"
               >
                 {SOCIAL_ICONS.instagram}
                 <span>Instagram</span>
@@ -88,7 +88,7 @@ export default function WelcomePage() {
                 href={WELCOME_MESSAGE.socialLinks.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition text-slate-700"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-border transition text-foreground"
               >
                 {SOCIAL_ICONS.whatsapp}
                 <span>WhatsApp</span>
@@ -97,7 +97,7 @@ export default function WelcomePage() {
                 href={WELCOME_MESSAGE.socialLinks.telegram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition text-slate-700"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-border transition text-foreground"
               >
                 {SOCIAL_ICONS.telegram}
                 <span>Telegram</span>
@@ -106,7 +106,7 @@ export default function WelcomePage() {
                 href={WELCOME_MESSAGE.socialLinks.x}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition text-slate-700"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-border transition text-foreground"
               >
                 {SOCIAL_ICONS.x}
                 <span>X</span>

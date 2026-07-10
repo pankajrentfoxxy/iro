@@ -62,11 +62,11 @@ export default function IroAdminDashboard() {
     <div>
       {/* Top bar */}
       <div className="flex justify-between items-center mb-8">
-        <nav className="text-sm text-gray-500">
+        <nav className="text-sm text-muted-foreground">
           <span>Dashboard</span>
         </nav>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-muted-foreground">
             {new Date().toLocaleDateString('en-IN', {
               weekday: 'short',
               day: 'numeric',
@@ -74,7 +74,7 @@ export default function IroAdminDashboard() {
               year: 'numeric',
             })}
           </span>
-          <div className="w-8 h-8 rounded-full bg-[#E8892C]/20 flex items-center justify-center text-[#E8892C] font-semibold text-sm">
+          <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-semibold text-sm">
             A
           </div>
         </div>
@@ -90,13 +90,13 @@ export default function IroAdminDashboard() {
         ].map((kpi) => (
           <div
             key={kpi.label}
-            className="bg-white rounded-xl p-5 shadow-sm border border-gray-100"
+            className="bg-white rounded-xl p-5 shadow-sm border border-border"
           >
             <div className="flex justify-between">
-              <span className="text-sm text-gray-500">{kpi.label}</span>
+              <span className="text-sm text-muted-foreground">{kpi.label}</span>
               <span className="text-xl">{kpi.icon}</span>
             </div>
-            <p className="font-display font-bold text-[#0D1B2A] text-2xl mt-1">
+            <p className="font-display font-bold text-primary text-2xl mt-1">
               {kpi.value}
             </p>
             <p className="text-xs text-success mt-1">{kpi.trend}</p>
@@ -105,9 +105,9 @@ export default function IroAdminDashboard() {
       </div>
 
       {/* Growth Chart */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-border mb-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-display font-bold text-[#0D1B2A]">
+          <h3 className="font-display font-bold text-primary">
             Reformer Growth – Last 30 Days
           </h3>
           <div className="flex gap-2">
@@ -117,8 +117,8 @@ export default function IroAdminDashboard() {
                 onClick={() => setChartRange(r)}
                 className={`px-3 py-1 rounded-lg text-sm ${
                   chartRange === r
-                    ? 'bg-[#E8892C] text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-secondary text-white'
+                    : 'bg-gray-100 text-muted-foreground hover:bg-gray-200'
                 }`}
               >
                 {r} Days
@@ -148,8 +148,8 @@ export default function IroAdminDashboard() {
       {/* Two-column row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* State Distribution */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <h3 className="font-display font-bold text-[#0D1B2A] mb-4">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-border">
+          <h3 className="font-display font-bold text-primary mb-4">
             State Distribution
           </h3>
           <div className="h-48">
@@ -176,22 +176,22 @@ export default function IroAdminDashboard() {
         </div>
 
         {/* Recent Signups */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <h3 className="font-display font-bold text-[#0D1B2A] mb-4">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-border">
+          <h3 className="font-display font-bold text-primary mb-4">
             Recent Signups
           </h3>
           <div className="space-y-2">
             {recentSignups.map((m) => (
               <div
                 key={m.id}
-                className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0"
+                className="flex items-center gap-3 py-2 border-b border-border last:border-0"
               >
-                <div className="w-8 h-8 rounded-full bg-[#E8892C]/20 flex items-center justify-center text-[#E8892C] font-semibold text-xs">
+                <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-semibold text-xs">
                   {getInitials(m.name)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-[#0D1B2A] truncate">{m.name}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-medium text-primary truncate">{m.name}</p>
+                  <p className="text-xs text-muted-foreground">
                     {m.phone} • {m.state} • {m.joined}
                   </p>
                 </div>
@@ -200,7 +200,7 @@ export default function IroAdminDashboard() {
           </div>
           <a
             href="/iro-admin/members"
-            className="inline-block mt-4 text-[#E8892C] text-sm font-medium hover:underline"
+            className="inline-block mt-4 text-secondary text-sm font-medium hover:underline"
           >
             View All Members →
           </a>
@@ -208,14 +208,14 @@ export default function IroAdminDashboard() {
       </div>
 
       {/* Onboarding Channel Breakdown */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <h3 className="font-display font-bold text-[#0D1B2A] mb-4">
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-border">
+        <h3 className="font-display font-bold text-primary mb-4">
           Signups by Channel
         </h3>
         <div className="space-y-4">
           {channelData.map((ch) => (
             <div key={ch.label} className="flex items-center gap-4">
-              <span className="w-28 text-sm text-gray-600">{ch.label}</span>
+              <span className="w-28 text-sm text-muted-foreground">{ch.label}</span>
               <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#E8892C] to-[#F0A04D]"

@@ -156,7 +156,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-neutral">
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-primary/95 backdrop-blur border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur border-b border-border shadow-card">
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent" />
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center h-14">
@@ -178,7 +178,7 @@ export default function ProfilePage() {
           className="mb-6"
         >
           <h1 className="text-2xl sm:text-3xl font-bold text-primary">Profile</h1>
-          <p className="text-slate-600 mt-1">
+          <p className="text-muted-foreground mt-1">
             Manage your details and location
           </p>
         </motion.div>
@@ -188,39 +188,39 @@ export default function ProfilePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
           onSubmit={handleSave}
-          className="space-y-4 bg-white rounded-xl p-6 shadow-lg border border-slate-200"
+          className="space-y-4 bg-white rounded-xl p-6 shadow-lg border border-border"
         >
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Name</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Name</label>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+              className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Email (optional)</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Email (optional)</label>
             <input
               type="email"
               value={form.email}
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+              className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Age (optional)</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Age (optional)</label>
             <input
               type="number"
               value={form.age}
               onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))}
               min={1}
               max={120}
-              className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+              className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
             />
           </div>
 
-          <div className="pt-4 border-t border-slate-200">
+          <div className="pt-4 border-t border-border">
             <h2 className="font-semibold text-slate-800 mb-2">Location</h2>
             <button
               type="button"
@@ -233,71 +233,71 @@ export default function ProfilePage() {
             {locationError && <p className="text-red-600 text-sm mb-2">{locationError}</p>}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">State</label>
+                <label className="block text-sm font-medium text-foreground mb-1">State</label>
                 <input
                   type="text"
                   value={form.state}
                   onChange={(e) => setForm((f) => ({ ...f, state: e.target.value }))}
                   placeholder="e.g. Maharashtra"
-                  className="w-full px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">District</label>
+                <label className="block text-sm font-medium text-foreground mb-1">District</label>
                 <input
                   type="text"
                   value={form.district}
                   onChange={(e) => setForm((f) => ({ ...f, district: e.target.value }))}
                   placeholder="e.g. Mumbai"
-                  className="w-full px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Block</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Block</label>
                 <input
                   type="text"
                   value={form.tehsil}
                   onChange={(e) => setForm((f) => ({ ...f, tehsil: e.target.value }))}
                   placeholder="e.g. Andheri"
-                  className="w-full px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Area / Place</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Area / Place</label>
                 <input
                   type="text"
                   value={form.area}
                   onChange={(e) => setForm((f) => ({ ...f, area: e.target.value }))}
                   placeholder="e.g. Village name"
-                  className="w-full px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">City</label>
+                <label className="block text-sm font-medium text-foreground mb-1">City</label>
                 <input
                   type="text"
                   value={form.city}
                   onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
                   placeholder="e.g. Mumbai"
-                  className="w-full px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Pincode</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Pincode</label>
                 <input
                   type="text"
                   value={form.pincode}
                   onChange={(e) => setForm((f) => ({ ...f, pincode: e.target.value }))}
                   placeholder="e.g. 400001"
-                  className="w-full px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                  className="w-full px-4 py-2 rounded-lg bg-muted border border-border text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                 />
               </div>
             </div>
           </div>
 
           {user?.referralCode && (
-            <div className="pt-4 border-t border-slate-200">
-              <label className="block text-sm font-medium text-slate-700 mb-1">Referral Code</label>
+            <div className="pt-4 border-t border-border">
+              <label className="block text-sm font-medium text-foreground mb-1">Referral Code</label>
               <p className="text-accent font-mono font-semibold">{user.referralCode}</p>
             </div>
           )}
@@ -312,7 +312,7 @@ export default function ProfilePage() {
           </button>
         </motion.form>
 
-        <p className="mt-6 text-center text-slate-600 text-sm">
+        <p className="mt-6 text-center text-muted-foreground text-sm">
           <Link href="/" className="text-accent hover:underline">Back to Home</Link>
         </p>
       </main>

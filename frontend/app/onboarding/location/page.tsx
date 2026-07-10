@@ -76,11 +76,11 @@ export default function LocationOnboardingPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white rounded-2xl p-8 shadow-xl border border-slate-200"
+        className="w-full max-w-md bg-white rounded-2xl p-8 shadow-xl border border-border"
       >
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-slate-800">Share your location</h1>
-          <p className="text-slate-600 mt-1">
+          <p className="text-muted-foreground mt-1">
             We&apos;ll use it to find your State, District, Block, Area/Place and Pincode
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function LocationOnboardingPage() {
 
         {error && <p className="mt-4 text-red-600 text-sm text-center">{error}</p>}
         {location && (
-          <div className="mt-6 p-4 bg-slate-50 rounded-lg text-sm text-slate-700">
+          <div className="mt-6 p-4 bg-muted rounded-lg text-sm text-foreground">
             <p><strong>State:</strong> {location.state || '-'}</p>
             <p><strong>District:</strong> {location.district || '-'}</p>
             <p><strong>Block:</strong> {location.block || '-'}</p>
@@ -115,7 +115,7 @@ export default function LocationOnboardingPage() {
           </div>
         )}
 
-        <p className="mt-6 text-center text-slate-600 text-sm">
+        <p className="mt-6 text-center text-muted-foreground text-sm">
           <Link href="/" className="text-accent font-medium hover:underline">
             Go to Home
           </Link>

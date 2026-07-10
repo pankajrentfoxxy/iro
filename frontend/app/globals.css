@@ -2,39 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── IRO Design Tokens (Sprint 1) ───────────────────────────── */
+/* ── IRO Design System — Light (default) & Dark ─────────────── */
 :root {
-  /* Primary palette */
-  --iro-navy: #0D1B2A;
-  --iro-orange: #E8892C;
-  --iro-cream: #F7F4EF;
-  --iro-slate: #2C3E50;
-
-  /* Semantic aliases */
-  --primary: var(--iro-navy);
-  --accent: var(--iro-orange);
-  --neutral: var(--iro-cream);
-  --text: var(--iro-slate);
-
-  /* Legacy / utility */
-  --success: #16A34A;
-  --warning: #F59E0B;
-  --error: #DC2626;
+  --background: 248 250 252;       /* #F8FAFC */
+  --foreground: 31 41 55;          /* #1F2937 */
+  --card: 255 255 255;             /* #FFFFFF */
+  --card-foreground: 31 41 55;
+  --border: 229 231 235;           /* #E5E7EB */
+  --primary: 11 60 111;            /* #0B3C6F */
+  --primary-foreground: 255 255 255;
+  --secondary: 255 153 51;         /* #FF9933 */
+  --secondary-foreground: 255 255 255;
+  --muted: 243 244 246;
+  --muted-foreground: 107 114 128; /* #6B7280 */
+  --success: 19 136 8;             /* #138808 */
 }
 
-body {
-  @apply antialiased;
-  background-color: var(--iro-cream);
-  color: var(--iro-slate);
+.dark {
+  --background: 15 23 42;
+  --foreground: 248 250 252;
+  --card: 30 41 59;
+  --card-foreground: 248 250 252;
+  --border: 51 65 85;
+  --primary: 59 130 246;
+  --primary-foreground: 255 255 255;
+  --secondary: 255 153 51;
+  --secondary-foreground: 255 255 255;
+  --muted: 51 65 85;
+  --muted-foreground: 148 163 184;
+  --success: 34 197 94;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .iro-card {
+    @apply bg-card text-card-foreground rounded-card-lg border border-border shadow-card-md;
+  }
+
+  .iro-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-secondary text-secondary-foreground font-semibold px-6 py-3 shadow-card hover:bg-secondary-dark transition-colors duration-200;
+  }
+
+  .iro-btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card text-foreground font-medium px-6 py-3 hover:bg-muted transition-colors duration-200;
+  }
+
+  .iro-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl text-foreground font-medium px-4 py-2 hover:bg-muted transition-colors duration-200;
+  }
+
+  .iro-input {
+    @apply w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-secondary/40 focus:border-secondary transition-shadow;
+  }
+
+  .iro-label {
+    @apply block text-sm font-medium text-foreground mb-1.5;
+  }
+
+  .iro-section-title {
+    @apply font-display text-2xl md:text-3xl font-bold text-primary dark:text-foreground;
+  }
+
+  .iro-section-accent {
+    @apply h-1 w-20 bg-secondary rounded-full;
+  }
 }
 
 @layer utilities {
   .glass {
-    @apply backdrop-blur-xl border border-white/20;
-    background-color: rgba(247, 244, 239, 0.7);
-  }
-  .glass-dark {
-    @apply backdrop-blur-xl border border-white/10;
-    background-color: rgba(13, 27, 42, 0.8);
+    @apply backdrop-blur-xl border border-border/60 bg-card/80;
   }
 }

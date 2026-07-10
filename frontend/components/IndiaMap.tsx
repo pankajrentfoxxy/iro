@@ -165,7 +165,7 @@ export default function IndiaMap({ data, onStateClick, hideDetailPanel, selected
     <div className="flex flex-col lg:flex-row gap-6">
       <div
         ref={containerRef}
-        className="flex-1 min-h-[300px] bg-slate-50 rounded-xl overflow-hidden flex items-center justify-center p-4 border border-slate-200 relative"
+        className="flex-1 min-h-[300px] bg-muted rounded-xl overflow-hidden flex items-center justify-center p-4 border border-border relative"
       >
         <div ref={svgRef} className="w-full flex justify-center items-center" />
         {!svgLoaded && (
@@ -175,7 +175,7 @@ export default function IndiaMap({ data, onStateClick, hideDetailPanel, selected
         )}
         {tooltip && (
           <div
-            className="absolute pointer-events-none z-10 px-3 py-1.5 bg-white/95 backdrop-blur border border-slate-200 rounded-lg shadow-lg text-sm font-medium text-slate-800 whitespace-nowrap -translate-x-1/2 -translate-y-full"
+            className="absolute pointer-events-none z-10 px-3 py-1.5 bg-white/95 backdrop-blur border border-border rounded-lg shadow-lg text-sm font-medium text-slate-800 whitespace-nowrap -translate-x-1/2 -translate-y-full"
             style={{ left: tooltip.x, top: tooltip.y }}
           >
             {tooltip.text}
@@ -188,7 +188,7 @@ export default function IndiaMap({ data, onStateClick, hideDetailPanel, selected
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
-            className="lg:w-80 bg-slate-50 rounded-xl p-4 border border-slate-200"
+            className="lg:w-80 bg-muted rounded-xl p-4 border border-border"
           >
             <div className="flex justify-between items-start mb-4">
               <h3 className="font-semibold text-slate-800">{selectedState}</h3>
@@ -199,7 +199,7 @@ export default function IndiaMap({ data, onStateClick, hideDetailPanel, selected
                 ×
               </button>
             </div>
-            <p className="text-2xl font-bold text-[#E8892C]">
+            <p className="text-2xl font-bold text-secondary">
               {dataMap[selectedState] ?? 0} members
             </p>
             <p className="text-sm text-slate-500 mt-1">
